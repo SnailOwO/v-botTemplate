@@ -8,12 +8,7 @@
     }],
     "stage-2"
   ],
-  "plugins": [
-    ["import", {
-      "libraryName": "iview",
-      "libraryDirectory": "src/components"
-    }]
-  ],
+  "plugins": [],
   "env": {
     "test": {
       "presets": ["env", "stage-2"],

@@ -16,6 +16,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "iview": "^2.14.3",
+    "less": "^3.5.2",
+    "less-loader": "^4.1.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

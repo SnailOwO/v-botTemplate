@@ -1,15 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',   //去除url自动带有#
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'index',
+      component: resolve => require(['../pages/index'], resolve)
+    },
+    {
+      path: '/login',
+      name: 'login',
+      // meta: { auth: false },
+      component: resolve => require(['../pages/login'], resolve)
     }
   ]
 })
