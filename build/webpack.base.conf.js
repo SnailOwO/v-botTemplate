@@ -35,7 +35,15 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      // '@': resolve('src'),
+      'src': path.resolve(__dirname, '../src'),
+      'assets': path.resolve(__dirname, '../src/assets'),
+      'components': path.resolve(__dirname, '../src/components'),
+      'api': path.resolve(__dirname,'../src/api'),
+      'css': path.resolve(__dirname,'../src/css'),
+      'langs': path.resolve(__dirname,'../src/langs'),
+      'router': path.resolve(__dirname,'../src/router')
+      //'vux-components': 'vux/src/components'
     }
   },
   module: {
@@ -74,10 +82,6 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      },
-      {
-        test: /\.less$/,
-        loader: 'style-loader!css-loader!less-loader'
       }
     ]
   },
