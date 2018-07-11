@@ -1,3 +1,6 @@
+import localzhCN from './zh/index.js';
+import localenUS from './en/index.js';
+
 import Vue from 'vue'
 import VueI18n from 'vue-i18n';
 
@@ -9,8 +12,8 @@ const i18n = new VueI18n({
     // https://blog.csdn.net/DOCALLEN/article/details/78408137?locationNum=2&fps=1
     // 暂时没做切换
     messages: {
-      'zh-CN': require('langs/zh/common'),   // 中文语言包
-      'en-US': require('langs/en/common')    // 英文语言包
+      'zh-CN': localzhCN,   // 中文语言包
+      'en-US': localenUS    // 英文语言包
     }
 })
 

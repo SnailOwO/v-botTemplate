@@ -10,7 +10,7 @@ import 'iview/dist/styles/iview.css'
 import 'src/css/common.less'
 
 Vue.use(iView)
-
+  
 Vue.prototype.$http = api;
 Vue.prototype.$axios = nativeAxios;
 
