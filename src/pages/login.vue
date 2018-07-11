@@ -9,15 +9,30 @@
       </div>
       <div class="login-btn">{{ this.$t('login.page.login') }}</div>
     </div>
+    <funnyRain></funnyRain>
   </div>  
 </template>
 
 <script>
+import funnyRain from "components/login/funnyRain.vue";
+
 export default {
+  components: {
+    funnyRain
+  },
   data () {
     return {
-      value: 'Welcome to Your Vue.js App'
+      
     }
+  },
+  created() {
+
+  },
+  mounted() {
+
+  },
+  methods: {
+
   }
 }
 </script>

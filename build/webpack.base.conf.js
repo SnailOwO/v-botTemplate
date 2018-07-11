@@ -42,7 +42,8 @@ module.exports = {
       'api': path.resolve(__dirname,'../src/api'),
       'css': path.resolve(__dirname,'../src/css'),
       'langs': path.resolve(__dirname,'../src/langs'),
-      'router': path.resolve(__dirname,'../src/router')
+      'router': path.resolve(__dirname,'../src/router'),
+      'assets': path.resolve(__dirname, '../src/assets'),
       //'vux-components': 'vux/src/components'
     }
   },
