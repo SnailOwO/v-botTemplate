@@ -1,4 +1,5 @@
 #login {
+    position: relative;
     .login-header {
         float: right;
         font-size: 15px;
@@ -13,10 +14,19 @@
         width: 100%;
         height: 300px;
         clear: both;
+        margin-bottom: 20px;
+        .custom-carousel {
+            height: 100%;
+        }
+        .carousel-item {
+            height: 300px;
+            text-align: center;
+        }
     }
     .login-content {
-        top: 50%;
-        left: 45%;
+        top: 25%;
+        width: 100%;
+        text-align: center;
         position: absolute;
         .name-box {
             margin-bottom: 15px;
@@ -31,11 +41,13 @@
         }
         .login-btn {
             color: @white;
+            margin: 0 auto;
             height: @height;
             cursor: pointer;
-            line-height: @height;
             text-align: center;
+            line-height: @height;
             background-color: @blue;
+            width: @login_btn_height;
         }
     }
 }
