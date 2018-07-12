@@ -23,9 +23,10 @@ export default {
     //获取当前窗口的宽、高
     this.watchWidth;
     this.watchHeight;
-    // this.initCanvas();
-    // this.createRain();
-    // this.move();
+    this.initCanvas();
+    this.createRain();
+    this.move();
+    //todo:全局伸缩页面后，自定义的拓展画布大小
   },
   methods: {
     initCanvas() {

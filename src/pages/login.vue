@@ -11,18 +11,18 @@
     <div class="login-content">
       <!-- carousel start -->
       <div class="login-carousel">
-        <Carousel autoplay v-model="first_index" loop class="custom-carousel">
+        <Carousel autoplay v-model="first_index" loop>
           <CarouselItem>
               <div class="carousel-item"><img src="/static/images/funny_rain/13.png"></div>
           </CarouselItem>
           <CarouselItem>
-              <div class="carousel-item">2</div>
+              <div class="carousel-item"><img src="/static/images/funny_rain/1.png"></div>
           </CarouselItem>
           <CarouselItem>
-              <div class="carousel-item">3</div>
+              <div class="carousel-item"><img src="/static/images/funny_rain/3.png"></div>
           </CarouselItem>
           <CarouselItem>
-              <div class="carousel-item">4</div>
+              <div class="carousel-item"><img src="/static/images/funny_rain/6.png"></div>
           </CarouselItem>
         </Carousel>
       </div>
