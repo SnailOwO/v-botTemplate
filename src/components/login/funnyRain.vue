@@ -12,7 +12,9 @@ export default {
       oGc: {},
       emojiNum: 13,
       rainAry: [],
-      rainNum: 1
+      rainNum: 100,
+      extenstion: '.png',
+      baseEmojiPath: '/static/images/funny_rain/'
     }
   },
   created() {
@@ -22,8 +24,8 @@ export default {
     this.watchWidth;
     this.watchHeight;
     this.initCanvas();
-    this.createRain();
-    requestAnimationFrame(this.move);
+    // this.createRain();
+    // this.move();
   },
   methods: {
     initCanvas() {
@@ -42,38 +44,28 @@ export default {
       let _this = this;
       //每个emoji rain 是一个单独的对象
       let rain = {
-        init: function() {
+        init: function(cxt) {
           this.x = _this.random(0,_this.width);   //随机从x轴降落
-          this.y = 100;   //y轴
-          this.r = 82;   //每个emoji的大小。这个是默认值
-          this.speed = _this.random(3,5);
+          this.y = 0;   //y轴
+          this.r = 80;   //每个emoji的大小。这个是默认值
+          this.speed = _this.random(3,6);
+          //直接绘制出对应的图片
+          let cur_emoji = _this.randomEmoji(1,_this.emojiNum);     //随机出一张emoji
+          let cur_emoji_path = _this.baseEmojiPath + cur_emoji + _this.extenstion;
+          this.img = new Image();
+          this.img.src = cur_emoji_path;
+          cxt.drawImage(this.img,this.x,this.y);   
         },
         draw: function(cxt) {
-          console.log('cxt',cxt);
-          //随机出一张emoji
-          let extenstion = '.png';
-          let cur_emoji = _this.randomEmoji(1,_this.emojiNum);
-          let cur_emoji_path = '/static/images/funny_rain/' + cur_emoji + extenstion;
-          console.log('emoji',cur_emoji_path);
-          let img = new Image();
-          img.src = cur_emoji_path;
+          cxt.drawImage(this.img,this.x,this.y);
           //画布上展示出对应的emoji
-          // cxt.beginPath();
-          // console.log('x',this.x);
-          console.log(img);
-          console.log(_this.height);
-          // cxt.fillStyle = 'white';
-          // cxt.arc(this.x, this.y + this.r, this.r, 0, Math.PI * 2, false);
-          cxt.drawImage(img,this.x,this.y);
-          // cxt.fill();
-          // cxt.closePath();  
           this.update(cxt);
         },
         update: function(cxt) {
           if (this.y < (_this.height - this.r)) {
             this.y += this.speed;
           } else {
-            _this.initRain();
+            this.init(_this.oGc);
           }
         }
       };
@@ -85,18 +77,17 @@ export default {
       for(let i = 0;i < _this.rainNum;i++) {
         setTimeout(function () {
             let oSnow = _this.initRain();
-            // console.log('233333',oSnow);
-            oSnow.init();
+            oSnow.init(_this.oGc);
             _this.rainAry.push(oSnow);
         }, 10 * i);
       }
     },
     move() {
-      console.log(this.rainAry);
       this.oGc.clearRect(0, 0, this.width, this.height);
       for(var i = 0; i < this.rainAry.length; i++) {
         this.rainAry[i].draw(this.oGc);
       }
+      // requestAnimationFrame(this.move);
     },
     random(min,max) {
       return Math.random() * (max - min) + min;
