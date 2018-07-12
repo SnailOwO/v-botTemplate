@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     initCanvas() {
-      //通过js 生成一个画布，而不是在页面上直接定义好一个画布
+      //定义画布
       this.canvas = document.getElementById('canvas');
       this.canvas.setAttribute('width', this.width);
       this.canvas.setAttribute('height', this.height);
@@ -42,7 +42,7 @@ export default {
         init: function(cxt) {
           this.x = _this.random(0,_this.width);   //随机从x轴降落
           this.y = 0;   //y轴
-          this.r = 80;   //每个emoji的大小。这个是默认值
+          this.r = 80;   //每个emoji的大小
           this.speed = _this.random(3,5);
           //直接绘制出对应的图片
           let cur_emoji = _this.randomEmoji(1,_this.emojiNum);     //随机出一张emoji
@@ -67,13 +67,12 @@ export default {
       return rain;
     },
     createRain() {
-      let _this = this;
       //通过for循环生成总共的emoji rain
-      for(let i = 0;i < _this.rainNum;i++) {
-        setTimeout(function () {
-            let oSnow = _this.initRain();
-            oSnow.init(_this.oGc);
-            _this.rainAry.push(oSnow);
+      for(let i = 0;i < this.rainNum;i++) {
+        setTimeout(() => {
+          let oSnow = this.initRain();
+          oSnow.init(this.oGc);
+          this.rainAry.push(oSnow);
         }, 10 * i);
       }
     },

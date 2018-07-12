@@ -1,15 +1,31 @@
 <template>
   <div id="login">
+    <!-- header start -->
+    <ul class="login-header">
+      <li>{{ this.$t('login.page.register') }}</li>
+      <li>{{ this.$t('login.page.getActiveCode') }}</li>
+    </ul>
+    <!-- header end -->
+
+    <div class="login-carousel">
+      <Carousel autoplay v-model="first_index" loop>
+        <CarouselItem>
+            <div class="demo-carousel">1</div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel">2</div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel">3</div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel">4</div>
+        </CarouselItem>
+      </Carousel>
+    </div>
+
     <!-- login start -->
     <div class="login-content">
-
-      <div class="login-header">
-        
-      </div>
-
-      <div class="web-name">
-
-      </div>
       <!-- name start -->
       <div class="name-box">
         <i-input :placeholder="this.$t('login.page.username')" class="login-input"></i-input>
@@ -40,7 +56,7 @@ export default {
   },
   data () {
     return {
-      
+      first_index: 0,
     }
   },
   created() {
