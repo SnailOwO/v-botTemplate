@@ -1,5 +1,5 @@
 <template>
-
+<canvas width="1325" height="943" id="canvas"></canvas>
 </template>
 
 <script>
@@ -23,22 +23,17 @@ export default {
     //获取当前窗口的宽、高
     this.watchWidth;
     this.watchHeight;
-    this.initCanvas();
+    // this.initCanvas();
     // this.createRain();
     // this.move();
   },
   methods: {
     initCanvas() {
       //通过js 生成一个画布，而不是在页面上直接定义好一个画布
-      let tmp_canvas = document.getElementById('canvas');
-      if(!tmp_canvas) {
-        this.canvas = document.createElement("canvas");
-        this.canvas.setAttribute('width', this.width);
-        this.canvas.setAttribute('height', this.height);
-        this.canvas.setAttribute('id', 'canvas');
-        document.body.appendChild(this.canvas);
-        this.oGc = this.canvas.getContext('2d');
-      }
+      this.canvas = document.getElementById('canvas');
+      this.canvas.setAttribute('width', this.width);
+      this.canvas.setAttribute('height', this.height);
+      this.oGc = this.canvas.getContext('2d');
     },
     initRain() {
       let _this = this;
@@ -48,7 +43,7 @@ export default {
           this.x = _this.random(0,_this.width);   //随机从x轴降落
           this.y = 0;   //y轴
           this.r = 80;   //每个emoji的大小。这个是默认值
-          this.speed = _this.random(3,6);
+          this.speed = _this.random(3,5);
           //直接绘制出对应的图片
           let cur_emoji = _this.randomEmoji(1,_this.emojiNum);     //随机出一张emoji
           let cur_emoji_path = _this.baseEmojiPath + cur_emoji + _this.extenstion;
@@ -87,7 +82,7 @@ export default {
       for(var i = 0; i < this.rainAry.length; i++) {
         this.rainAry[i].draw(this.oGc);
       }
-      // requestAnimationFrame(this.move);
+      requestAnimationFrame(this.move);
     },
     random(min,max) {
       return Math.random() * (max - min) + min;
