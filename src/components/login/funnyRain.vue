@@ -12,7 +12,7 @@ export default {
       oGc: {},
       emojiNum: 13,
       rainAry: [],
-      rainNum: 100,
+      rainNum: 300,
       extenstion: '.png',
       baseEmojiPath: '/static/images/funny_rain/'
     }
