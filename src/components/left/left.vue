@@ -1,7 +1,4 @@
 <template>
-  <!-- <div id="left-nav">
-    
-  </div>   -->
     <Sider collapsible :collapsed-width="78" v-model="collapsed">
         <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
             <MenuItem name="1-1">
@@ -28,12 +25,14 @@ export default {
     }
   },
   methods: {
-    // menuitemClasses: function () {
-    //     return [
-    //         'menu-item',
-    //         this.collapsed ? 'collapsed-menu' : ''
-    //     ]
-    // }
+    menuitemClasses: function () {
+        this.$nextTick(function () {
+            return [
+                'menu-item',
+                this.collapsed ? 'collapsed-menu' : ''
+            ]
+        })
+    }
   },
   computed: {
     

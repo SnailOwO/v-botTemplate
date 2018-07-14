@@ -1,7 +1,20 @@
 <template>
-  <div class="hello">
+  <!-- <div class="hello">
     12222
-  </div>  
+  </div>   -->
+  <Content :style="{padding: '0 16px 16px'}">
+      <Breadcrumb :style="{margin: '16px 0'}">
+          <BreadcrumbItem>Home</BreadcrumbItem>
+          <BreadcrumbItem>Components</BreadcrumbItem>
+          <BreadcrumbItem>Layout</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+          <div style="height: 600px">Content</div>
+      </Card>
+      <!-- <div class="content">
+          <div>233333</div>
+      </div> -->
+  </Content>
 </template>
 
 <script>
