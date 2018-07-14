@@ -57,3 +57,73 @@
   button {
     border: none;
   }
+
+/* header */
+.layout{
+  // .ivu-layout-sider,
+  // .ivu-menu-dark,
+  // .ivu-menu {
+  //   background: #24292e;
+  // }
+
+}
+
+#header {
+  height: 65px;
+  line-height: 60px;
+  background-color: #2a323d;
+  .logo-box {
+    width: 200px;
+    float: left;
+    padding-left: 17px;
+    .logo{
+      float: left;
+      width: 50px;
+      height: 50px;
+      margin-top: 6px;
+      background-repeat: no-repeat;
+      background-image: url('../../assets/images/V-bot.png');
+    }
+    .website-name {
+      height: 50px;
+      color: #fff;
+      padding-left: 10px;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: @webSite_title;
+    }
+  }
+}
+
+
+
+/* mainLayout */
+.layout-con{
+    height: 100%;
+    width: 100%;
+}
+.menu-item span{
+    display: inline-block;
+    overflow: hidden;
+    width: 69px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+    transition: width .2s ease .2s;
+}
+.menu-item i{
+    transform: translateX(0px);
+    transition: font-size .2s ease, transform .2s ease;
+    vertical-align: middle;
+    font-size: 16px;
+}
+.collapsed-menu span{
+    width: 0px;
+    transition: width .2s ease;
+}
+.collapsed-menu i{
+    transform: translateX(5px);
+    transition: font-size .2s ease .2s, transform .2s ease .2s;
+    vertical-align: middle;
+    font-size: 22px;
+}
