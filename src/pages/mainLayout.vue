@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <header></header>
+    <headerNav></headerNav>
     <Layout :style="{minHeight: '100vh'}">
         <Sider collapsible :collapsed-width="78" v-model="isCollapsed">
             <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import header from "components/header/header.vue";
+import headerNav from "components/header/header.vue";
 
 export default {
   components: {
-    header
+    headerNav
   },
   data () {
     return {
