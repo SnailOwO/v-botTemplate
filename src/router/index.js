@@ -8,8 +8,31 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'index',
-      component: resolve => require(['../pages/mainLayout'], resolve)
+      name: 'main',
+      redirect: '/',
+      component: resolve => require(['../pages/mainLayout'], resolve),
+      children: [
+        {
+          path: '/',
+          name: 'index',
+          component: resolve => require(['../components/index/index'], resolve),
+        },
+        {
+          path: 'sys',
+          name: 'systemSet',
+          component: resolve => require(['../pages/sysSet'], resolve),
+        },
+        {
+          path: 'role',
+          name: 'roleManage',
+          component: resolve => require(['../pages/sysSet'], resolve),
+        },
+        {
+          path: 'user',
+          name: 'userManage',
+          component: resolve => require(['../pages/sysSet'], resolve),
+        },
+      ]
     },
     {
       path: '/login',

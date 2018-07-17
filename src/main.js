@@ -8,10 +8,12 @@ import {nativeAxios,api} from 'api/axios_config'
 import i18n from 'langs/lang'
 import 'iview/dist/styles/iview.css'
 import 'src/css/common.less'
+import echarts from 'echarts'
 
 Vue.use(iView)
   
 Vue.prototype.$http = api;
+Vue.prototype.$echarts = echarts;
 Vue.prototype.$axios = nativeAxios;
 
 /* eslint-disable no-new */
