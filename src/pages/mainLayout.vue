@@ -26,16 +26,11 @@ export default {
   },
   data () {
     return {
-        isCollapsed: false
+      isCollapsed: false
     };
   },
   methods: {
-    // menuitemClasses: function () {
-    //     return [
-    //         'menu-item',
-    //         this.isCollapsed ? 'collapsed-menu' : ''
-    //     ]
-    // }
+    
   },
   computed: {
     

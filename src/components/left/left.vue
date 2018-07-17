@@ -23,17 +23,15 @@ export default {
     }
   },
   methods: {
-    menuitemClasses: function () {
-        this.$nextTick(function () {
-            return [
-                'menu-item',
-                this.collapsed ? 'collapsed-menu' : ''
-            ]
-        })
-    }
+  
   },
   computed: {
-
+    menuitemClasses: function () {
+        return [
+            'menu-item',
+            this.collapsed ? 'collapsed-menu' : ''
+        ]
+    }
   },
   props: ['collapsed']
 }
