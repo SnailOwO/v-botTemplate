@@ -6,8 +6,6 @@
           <leftNav :collapsed="isCollapsed"></leftNav>
         </Sider>
         <Layout>
-            <!-- <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}"></Header> -->
-            <!-- <contentNav></contentNav> -->
             <router-view/>
         </Layout>
     </Layout>
@@ -17,13 +15,11 @@
 <script>
 import headerNav from "components/header/header.vue";
 import leftNav from "components/left/left.vue";
-// import contentNav from "components/contents.vue";
 
 export default {
   components: {
     headerNav,
     leftNav
-    // contentNav
   },
   data () {
     return {
