@@ -66,8 +66,9 @@
 /* header */
 #header {
   height: 65px;
+  color: @white;
   line-height: 60px;
-  background-color: #2a323d;
+  background-color: @header_background_color;
   .logo-box {
     width: 200px;
     float: left;
@@ -82,11 +83,47 @@
     }
     .website-name {
       height: 50px;
-      color: #fff;
       padding-left: 10px;
       display: inline-block;
       vertical-align: middle;
       font-size: @webSite_title;
+    }
+  }
+
+  .user-box {
+    width: 150px;
+    float: right;
+    cursor: pointer;
+    text-align: center;
+    font-size: @font_size;
+    .user-head {
+      width: 50px;
+      display: inline-block;
+      img {
+        width: 100%;
+        // border-radius: 50%;
+        vertical-align: middle;
+        // border: 1px solid #fffbdd;
+      }
+    }
+    .user-name {
+      cursor: pointer;
+      display: inline-block;
+      i{
+        margin-left: 5px;
+      }
+    }
+    .user-menu {
+      display: none;
+    }
+    &:hover .user-menu {
+      z-index: 10;
+      display: block;
+      background-color: @header_background_color;
+      li {
+        height: 35px;
+        line-height: 35px;
+      }
     }
   }
 }

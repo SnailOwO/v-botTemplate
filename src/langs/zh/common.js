@@ -18,6 +18,9 @@ const common = {
                 doutuBot: '斗图Bot'
             }
         }
+    },
+    header: {   //头部导航栏
+        headImage: '用户头像'
     }
 }
 
