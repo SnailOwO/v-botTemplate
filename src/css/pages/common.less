@@ -67,11 +67,13 @@
 #header {
   height: 65px;
   color: @white;
+  cursor: pointer;
   line-height: 60px;
   background-color: @header_background_color;
   .logo-box {
     width: 200px;
     float: left;
+    cursor: pointer;
     padding-left: 17px;
     .logo{
       float: left;
@@ -89,16 +91,14 @@
       font-size: @webSite_title;
     }
   }
-
   .user-box {
     width: 150px;
     float: right;
     cursor: pointer;
-    text-align: center;
     font-size: @font_size;
     .user-head {
       width: 50px;
-      display: inline-block;
+      float: left;
       img {
         width: 100%;
         // border-radius: 50%;
@@ -106,25 +106,33 @@
         // border: 1px solid #fffbdd;
       }
     }
-    .user-name {
-      cursor: pointer;
-      display: inline-block;
-      i{
-        margin-left: 5px;
-      }
-    }
     .user-menu {
       display: none;
     }
-    &:hover .user-menu {
-      z-index: 10;
-      display: block;
-      background-color: @header_background_color;
-      li {
-        height: 35px;
-        line-height: 35px;
+    .user-name {
+      width: 85px;
+      float: right;
+      cursor: pointer;
+      i{
+        margin-left: 5px;
+      }
+      &:hover .user-menu {
+        z-index: 10;
+        display: block;
+        background-color: @header_background_color;
+        li {
+          height: 35px;
+          line-height: 35px;
+          text-align: center;
+          font-size: @base_font_size;
+        }
       }
     }
+  }
+  .extra-operate {
+    float: right;
+    margin-right: 15px;
+    font-size: @icon_size;
   }
 }
 
