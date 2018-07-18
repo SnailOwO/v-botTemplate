@@ -42,7 +42,7 @@
             margin-bottom: 15px;
         }
         .login-input {
-            width: 300px; 
+            width: @base_input_width; 
             height: @input_height;  
             padding-left: @input_padding_left;
         }
@@ -55,6 +55,20 @@
             line-height: @height;
             background-color: @blue;
             width: @login_btn_height;
+        }
+    }
+}
+
+#register-box {
+    width: 60%;
+    margin: 0 auto;
+    .account-box,
+    .pwd-box,
+    .email-box,
+    .phone-box {
+        margin-bottom: 10px;
+        input {
+            padding-left: @base_padding_left;
         }
     }
 }

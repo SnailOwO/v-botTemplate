@@ -20,7 +20,14 @@ const common = {
         }
     },
     header: {   //头部导航栏
-        headImage: '用户头像'
+        headImage: '用户头像',
+        userMeun: {
+            resetPwd: '修改密码',
+            logout: '退出登录'
+        },
+        extraMenu: {
+            link: '联系管理员',
+        }
     }
 }
 

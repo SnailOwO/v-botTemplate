@@ -14,7 +14,8 @@ export default {
       rainAry: [],
       rainNum: 150,
       extenstion: '.png',
-      baseEmojiPath: '/static/images/funny_rain/'
+      baseEmojiPath: '/static/images/funny_rain/',
+      timeOut: ''
     }
   },
   created() {
@@ -27,6 +28,9 @@ export default {
     this.createRain();
     this.move();
     //todo:全局伸缩页面后，自定义的拓展画布大小
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeOut);
   },
   methods: {
     initCanvas() {
@@ -70,7 +74,7 @@ export default {
     createRain() {
       //通过for循环生成总共的emoji rain
       for(let i = 0;i < this.rainNum;i++) {
-        setTimeout(() => {
+        this.timeOut = setTimeout(() => {
           let oSnow = this.initRain();
           oSnow.init(this.oGc);
           this.rainAry.push(oSnow);

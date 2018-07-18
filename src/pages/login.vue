@@ -2,7 +2,7 @@
   <div id="login">
     <!-- header start -->
     <ul class="login-header">
-      <li>{{ this.$t('login.page.register') }}</li>
+      <li @click="showRegister">{{ this.$t('login.page.register') }}</li>
       <li>{{ this.$t('login.page.getActiveCode') }}</li>
     </ul>
     <!-- header end -->
@@ -60,6 +60,33 @@
     </div>
     <!-- login end -->
     <funnyRain></funnyRain>
+    <Modal
+      :title="this.$t('login.page.registerDialog.title')"
+      v-model="isRegister"
+      :mask-closable="false"
+      >
+      <div id="register-box">
+        <div class="account-box">
+          <i-input v-model="account" :placeholder="this.$t('login.page.registerDialog.account')"></i-input>
+        </div>
+        <div class="pwd-box">
+          <i-input v-model="registerPwd" :placeholder="this.$t('login.page.registerDialog.registerPwd')"></i-input>
+        </div>
+        <div class="pwd-box">
+          <i-input v-model="repeatPwd" :placeholder="this.$t('login.page.registerDialog.repeatPwd')"></i-input>
+        </div>
+        <div class="email-box">
+          <i-input v-model="email" :placeholder="this.$t('login.page.registerDialog.email')"></i-input>
+        </div>
+        <div class="phone-box">
+          <i-input v-model="phone" :placeholder="this.$t('login.page.registerDialog.phone')"></i-input>
+        </div>
+      </div>
+      <div slot="footer">
+          <Button @click="cancel()">{{ this.$t('login.page.registerDialog.cancel') }}</Button>
+          <Button type="primary" @click="register">{{ this.$t('login.page.registerDialog.confirm') }}</Button>
+      </div>
+    </Modal>
   </div>  
 </template>
 
@@ -76,7 +103,14 @@ export default {
       isNoraml: false,   //默认使用账户名登录
       username: '',
       password: '',
-      code: ''
+      code: '',
+      //注册
+      isRegister: false,
+      account: '',
+      registerPwd: '',
+      repeatPwd: '',
+      email: '',
+      phone: ''   //手机号(可以为空)
     }
   },
   created() {
@@ -103,6 +137,48 @@ export default {
         }
       }
       //todo: 发送登录请求
+    },
+    showRegister() {
+      this.isRegister = true;
+    },
+    register() {
+      if(!this.account) {
+        this.$Message.warning(this.$t('login.info.accountIsEmpty'));
+        return false;
+      }
+      if(this.account.length > 32) {
+        this.$Message.warning(this.$t('login.info.accountLengthIllegal'));
+        return false;
+      }
+      //todo: 特殊字符判断
+      //todo: 密码强度判断
+      if(!this.registerPwd) {
+        this.$Message.warning(this.$t('login.info.pwdIsEmpty'));
+        return false;
+      }
+      if(this.registerPwd != this.repeatPwd) {
+        this.$Message.warning(this.$t('login.info.twicePwdIsWrong'));
+        return false;
+      }
+      if(!this.email) {
+        this.$Message.warning(this.$t('login.info.emailIsEmpty'));
+        return false;
+      }
+      let email_reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+      if(!email_reg.test(this.email)) {
+        this.$Message.warning(this.$t('login.info.emailIsIllegal'));
+        return false;
+      }
+      if(this.phone) {   //手机号位非必填项
+        let phone_reg = /^1\d{10}$/;
+        if(!phone_reg.test(this.phone)) {
+          this.$Message.warning(this.$t('login.info.phoneIsIllegal'));
+          return false;
+        }
+      }
+    },
+    cancel() {
+      this.isRegister = !this.isRegister;
     }
   },
   watch: {
@@ -111,6 +187,15 @@ export default {
         this.username = '';
         this.password = '';
         this.code = '';
+      }
+    },
+    isRegister: function() {
+      if(!this.isRegister) {
+        this.email = '';
+        this.phone = '';  
+        this.account = '';
+        this.repeatPwd = '';
+        this.registerPwd = '';
       }
     }
   }

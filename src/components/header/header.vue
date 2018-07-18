@@ -5,7 +5,12 @@
       <label class="website-name">V-bot</label>
     </div>
     <div class="extra-operate">
-      <i class="icon-add-vm icon-size ivu-icon ivu-icon-plus-circled"></i>
+      <Poptip placement="left">
+        <i class="icon-add-vm icon-size ivu-icon ivu-icon-plus-circled"></i>
+        <ul class="extra-menu" slot="content">
+          <li>{{ this.$t('common.header.extraMenu.link') }}</li>
+        </ul>
+      </Poptip>
     </div>
     <div class="user-box">
       <div class="user-head">
@@ -15,8 +20,8 @@
         <label>admin</label>
         <i class="dropdown ivu-icon ivu-icon-arrow-down-b"></i>
         <ul class="user-menu">
-          <li>修改密码</li>
-          <li>退出登录</li>
+          <li>{{ this.$t('common.header.userMeun.resetPwd') }}</li>
+          <li>{{ this.$t('common.header.userMeun.logout') }}</li>
         </ul>
       </div>
     </div>
