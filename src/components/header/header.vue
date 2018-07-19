@@ -14,7 +14,8 @@
     </div>
     <div class="user-box">
       <div class="user-head">
-        <img :src="headImg" :alt="this.$t('common.header.headImage')" />
+        <Avatar :src="headImg" />
+        <!-- <img :src="headImg" :alt="this.$t('common.header.headImage')" /> -->
       </div>
       <div class="user-name">
         <label>admin</label>

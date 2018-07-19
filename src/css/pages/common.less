@@ -15,6 +15,7 @@
 
   #app {
     height: 100%;
+    color: @content;
     overflow: hidden;
     background-color: @base_background_color;
   }
@@ -88,22 +89,19 @@
       padding-left: 10px;
       display: inline-block;
       vertical-align: middle;
-      font-size: @webSite_title;
+      font-size: @main_title;
     }
   }
   .user-box {
-    width: 150px;
+    width: 130px;
     float: right;
     cursor: pointer;
     font-size: @font_size;
     .user-head {
-      width: 50px;
       float: left;
       img {
         width: 100%;
-        // border-radius: 50%;
         vertical-align: middle;
-        // border: 1px solid #fffbdd;
       }
     }
     .user-menu {

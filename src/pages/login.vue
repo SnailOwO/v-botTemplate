@@ -64,6 +64,7 @@
       :title="this.$t('login.page.registerDialog.title')"
       v-model="isRegister"
       :mask-closable="false"
+      width="400"
       >
       <div id="register-box">
         <div class="account-box">

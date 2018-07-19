@@ -48,7 +48,7 @@ export default {
           this.x = _this.random(0,_this.width);   //随机从x轴降落
           this.y = 0;   //y轴
           this.r = 80;   //每个emoji的大小
-          this.speed = _this.random(3,5);
+          this.speed = _this.random(1,5);
           //直接绘制出对应的图片
           let cur_emoji = _this.randomEmoji(1,_this.emojiNum);     //随机出一张emoji
           let cur_emoji_path = _this.baseEmojiPath + cur_emoji + _this.extenstion;
@@ -78,7 +78,7 @@ export default {
           let oSnow = this.initRain();
           oSnow.init(this.oGc);
           this.rainAry.push(oSnow);
-        }, 10 * i);
+        }, 100 * i);
       }
     },
     move() {
