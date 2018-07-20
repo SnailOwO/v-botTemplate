@@ -19,7 +19,11 @@ const login = {
             email: '请输入您的邮箱',
             phone: '请输入您的手机号（非必填）',
             preStep: '上一步',
-            confirm: '确认'
+            confirm: '确认',
+            firstStep: '注册账号',
+            secondStep: '填写密码',
+            thirdStep: '确认邮箱',
+            fourthStep: '其他信息'
         }
     },
     info: {

@@ -44,6 +44,7 @@ module.exports = {
       'langs': path.resolve(__dirname,'../src/langs'),
       'router': path.resolve(__dirname,'../src/router'),
       'assets': path.resolve(__dirname, '../src/assets'),
+      'store': path.resolve(__dirname, '../src/store'),
       //'vux-components': 'vux/src/components'
     }
   },

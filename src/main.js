@@ -9,6 +9,7 @@ import i18n from 'langs/lang'
 import 'iview/dist/styles/iview.css'
 import 'src/css/common.less'
 import echarts from 'echarts'
+import store from 'store/index'
 
 Vue.use(iView)
   
@@ -20,5 +21,6 @@ Vue.prototype.$axios = nativeAxios;
 new Vue({
   router,
   i18n,
+  store,
   render: h => h(App)
 }).$mount('#app')

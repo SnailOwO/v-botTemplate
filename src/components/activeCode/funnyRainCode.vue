@@ -11,14 +11,16 @@ export default {
   },
   data () {
     return {
-     
+        method: this.$store.state.activeCode.method,
+        extraSetting: ''
     }
   },
   created() {
-
+ 
   }, 
   mounted(){
-
+    let c = this.$store.state.activeCode[this.method];
+    console.log(c);
   },
   methods: { 
 

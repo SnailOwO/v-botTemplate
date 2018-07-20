@@ -3,7 +3,7 @@
     <!-- header start -->
     <ul class="login-header">
       <li @click="showRegister">{{ this.$t('login.page.register') }}</li>
-      <li>{{ this.$t('login.page.getActiveCode') }}</li>
+      <li @click="showActiveCode">{{ this.$t('login.page.getActiveCode') }}</li>
     </ul>
     <!-- header end -->
 
@@ -60,6 +60,7 @@
     </div>
     <!-- login end -->
     <funnyRain :level="level"></funnyRain>
+    <funnyRainCode v-if="isActiveCode"></funnyRainCode>
     <!-- register box start -->
     <Modal
       :title="this.$t('login.page.registerDialog.title')"
@@ -67,10 +68,10 @@
       :mask-closable="false"
       >
       <Steps :current="currentStep">
-        <Step title="注册账号"></Step>
-        <Step title="填写密码"></Step>
-        <Step title="确认邮箱"></Step>
-        <Step title="其他信息"></Step>
+        <Step :title="this.$t('login.page.registerDialog.firstStep')"></Step>
+        <Step :title="this.$t('login.page.registerDialog.secondStep')"></Step>
+        <Step :title="this.$t('login.page.registerDialog.thirdStep')"></Step>
+        <Step :title="this.$t('login.page.registerDialog.fourthStep')"></Step>
       </Steps>
       <div id="register-box">
         <div class="account-box" v-if="!currentStep">
@@ -100,10 +101,12 @@
 
 <script>
 import funnyRain from "components/login/funnyRain.vue";
+import funnyRainCode from "components/activeCode/funnyRainCode.vue";
 
 export default {
   components: {
-    funnyRain
+    funnyRain,
+    funnyRainCode
   },
   data () {
     return {
@@ -120,14 +123,16 @@ export default {
       email: '',
       phone: '',   //手机号(可以为空)
       currentStep: 0,   //0:account 1:pwd 2:email 3:extra info  
-      level: 1
+      //邀请码
+      level: this.$store.state.level,   //这个是登录页的下落速度
+      isActiveCode: false 
     }
   },
   created() {
-
+    
   },
   mounted() {
-
+   
   },
   methods: {
     login() {
@@ -206,6 +211,9 @@ export default {
         this.currentStep -= 1;
         this.currentStep = this.currentStep <= 0 ? 0 : this.currentStep;
       }
+    },
+    showActiveCode() {   //显示邀请码弹窗
+      this.isActiveCode = !this.isActiveCode;
     }
   },
   watch: {
