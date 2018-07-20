@@ -13,16 +13,16 @@
       <div class="login-carousel">
         <Carousel autoplay v-model="first_index" loop>
           <CarouselItem>
-              <div class="carousel-item"><img src="/static/images/funny_rain/13.png"></div>
+              <div class="carousel-item"><img src="/static/images/advertisement/base_ad1.jpg"></div>
           </CarouselItem>
           <CarouselItem>
-              <div class="carousel-item"><img src="/static/images/funny_rain/1.png"></div>
+              <div class="carousel-item"><img src="/static/images/advertisement/base_ad1.jpg"></div>
           </CarouselItem>
           <CarouselItem>
-              <div class="carousel-item"><img src="/static/images/funny_rain/3.png"></div>
+              <div class="carousel-item"><img src="/static/images/advertisement/base_ad3.jpg"></div>
           </CarouselItem>
           <CarouselItem>
-              <div class="carousel-item"><img src="/static/images/funny_rain/6.png"></div>
+              <div class="carousel-item"><img src="/static/images/advertisement/base_ad3.jpg"></div>
           </CarouselItem>
         </Carousel>
       </div>
@@ -59,35 +59,42 @@
       <!-- login-btn end -->
     </div>
     <!-- login end -->
-    <funnyRain></funnyRain>
+    <funnyRain :level="level"></funnyRain>
+    <!-- register box start -->
     <Modal
       :title="this.$t('login.page.registerDialog.title')"
       v-model="isRegister"
       :mask-closable="false"
-      width="400"
       >
+      <Steps :current="currentStep">
+        <Step title="注册账号"></Step>
+        <Step title="填写密码"></Step>
+        <Step title="确认邮箱"></Step>
+        <Step title="其他信息"></Step>
+      </Steps>
       <div id="register-box">
-        <div class="account-box">
+        <div class="account-box" v-if="!currentStep">
           <i-input v-model="account" :placeholder="this.$t('login.page.registerDialog.account')"></i-input>
         </div>
-        <div class="pwd-box">
-          <i-input v-model="registerPwd" :placeholder="this.$t('login.page.registerDialog.registerPwd')"></i-input>
+        <div class="pwd-box" v-if="currentStep == 1">
+          <i-input v-model="registerPwd" type="password" :placeholder="this.$t('login.page.registerDialog.registerPwd')"></i-input>
         </div>
-        <div class="pwd-box">
-          <i-input v-model="repeatPwd" :placeholder="this.$t('login.page.registerDialog.repeatPwd')"></i-input>
+        <div class="pwd-box" v-if="currentStep == 1">
+          <i-input v-model="repeatPwd" type="password" :placeholder="this.$t('login.page.registerDialog.repeatPwd')"></i-input>
         </div>
-        <div class="email-box">
+        <div class="email-box" v-if="currentStep == 2">
           <i-input v-model="email" :placeholder="this.$t('login.page.registerDialog.email')"></i-input>
         </div>
-        <div class="phone-box">
+        <div class="phone-box" v-if="currentStep == 3">
           <i-input v-model="phone" :placeholder="this.$t('login.page.registerDialog.phone')"></i-input>
         </div>
       </div>
       <div slot="footer">
-          <Button @click="cancel()">{{ this.$t('login.page.registerDialog.cancel') }}</Button>
+          <Button v-if="currentStep"  @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
           <Button type="primary" @click="register">{{ this.$t('login.page.registerDialog.confirm') }}</Button>
       </div>
     </Modal>
+    <!-- register box end -->
   </div>  
 </template>
 
@@ -111,7 +118,9 @@ export default {
       registerPwd: '',
       repeatPwd: '',
       email: '',
-      phone: ''   //手机号(可以为空)
+      phone: '',   //手机号(可以为空)
+      currentStep: 0,   //0:account 1:pwd 2:email 3:extra info  
+      level: 1
     }
   },
   created() {
@@ -143,43 +152,60 @@ export default {
       this.isRegister = true;
     },
     register() {
-      if(!this.account) {
-        this.$Message.warning(this.$t('login.info.accountIsEmpty'));
-        return false;
+      if(this.currentStep == 0) {
+        if(!this.account) {
+          this.$Message.warning(this.$t('login.info.accountIsEmpty'));
+          return false;
+        }
+        if(this.account.length > 32) {
+          this.$Message.warning(this.$t('login.info.accountLengthIllegal'));
+          return false;
+        }
+        //todo: 特殊字符判断
       }
-      if(this.account.length > 32) {
-        this.$Message.warning(this.$t('login.info.accountLengthIllegal'));
-        return false;
-      }
-      //todo: 特殊字符判断
-      //todo: 密码强度判断
-      if(!this.registerPwd) {
-        this.$Message.warning(this.$t('login.info.pwdIsEmpty'));
-        return false;
-      }
-      if(this.registerPwd != this.repeatPwd) {
-        this.$Message.warning(this.$t('login.info.twicePwdIsWrong'));
-        return false;
-      }
-      if(!this.email) {
-        this.$Message.warning(this.$t('login.info.emailIsEmpty'));
-        return false;
-      }
-      let email_reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-      if(!email_reg.test(this.email)) {
-        this.$Message.warning(this.$t('login.info.emailIsIllegal'));
-        return false;
-      }
-      if(this.phone) {   //手机号位非必填项
-        let phone_reg = /^1\d{10}$/;
-        if(!phone_reg.test(this.phone)) {
-          this.$Message.warning(this.$t('login.info.phoneIsIllegal'));
+      if(this.currentStep == 1) {
+        //todo: 密码强度判断
+        if(!this.registerPwd) {
+          this.$Message.warning(this.$t('login.info.pwdIsEmpty'));
+          return false;
+        }
+        if(this.registerPwd != this.repeatPwd) {
+          this.$Message.warning(this.$t('login.info.twicePwdIsWrong'));
           return false;
         }
       }
+      if(this.currentStep == 2) {
+        if(!this.email) {
+          this.$Message.warning(this.$t('login.info.emailIsEmpty'));
+          return false;
+        }
+        let email_reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+        if(!email_reg.test(this.email)) {
+          this.$Message.warning(this.$t('login.info.emailIsIllegal'));
+          return false;
+        }
+      }
+      if(this.currentStep == 3) {
+        if(this.phone) {   //手机号位非必填项
+        let phone_reg = /^1\d{10}$/;
+          if(!phone_reg.test(this.phone)) {
+            this.$Message.warning(this.$t('login.info.phoneIsIllegal'));
+            return false;
+          }
+        }
+      }
+      //下一步
+      if(this.currentStep == 3) {
+        alert('注册成功');
+      } else {
+        this.currentStep += 1;
+      }
     },
-    cancel() {
-      this.isRegister = !this.isRegister;
+    preStep() {   //上一步
+      if(this.currentStep) {
+        this.currentStep -= 1;
+        this.currentStep = this.currentStep <= 0 ? 0 : this.currentStep;
+      }
     }
   },
   watch: {
@@ -197,6 +223,7 @@ export default {
         this.account = '';
         this.repeatPwd = '';
         this.registerPwd = '';
+        this.currentStep = 0;
       }
     }
   }
