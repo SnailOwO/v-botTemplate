@@ -24,6 +24,17 @@ const login = {
             secondStep: '填写密码',
             thirdStep: '确认邮箱',
             fourthStep: '其他信息'
+        },
+        activeCodeDialog: {
+            title: '获取邀请码',
+            simple: '简单',
+            middle: '中等',
+            hard: '还行',
+            firstStep: '难度选择',
+            secondStep: 'demo生成',
+            thirdStep: '开始作答',
+            fourthStep: '结果',
+            confirm: '确认'
         }
     },
     info: {
@@ -38,7 +49,10 @@ const login = {
         twicePwdIsWrong: '两次密码不一致',
         emailIsEmpty: '邮箱不能为空',
         emailIsIllegal: '邮箱格式不合法',
-        phoneIsIllegal: '非法的手机号'
+        phoneIsIllegal: '非法的手机号',
+        //滑稽雨activeCode
+        illegalDifficulty: '非法难度选择',
+        rememberEmoji: '请记住当前表情:'
     }
 }
 export default login

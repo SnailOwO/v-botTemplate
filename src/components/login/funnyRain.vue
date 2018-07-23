@@ -1,5 +1,5 @@
 <template>
-<canvas width="1325" height="943" id="canvas"></canvas>
+<canvas width="500" height="500" id="canvas"></canvas>
 </template>
 
 <script>
@@ -17,16 +17,14 @@ export default {
       baseEmojiPath: '/static/images/funny_rain/',
       timeOut: '',
       customSpeed: {
-        1: 0,   //简单
+        1: 0,   //正常
         2: 3,   //还行
-        3: 5,   //中等
-        4: 10   //困难
+        3: 5,   //稍快
+        4: 10   //非常快
       }
     }
   },
-  created() {
-    console.log(this.customSpeed[this.level]);
-  },  
+  created() {},  
   mounted() {
     //获取当前窗口的宽、高
     this.watchWidth;

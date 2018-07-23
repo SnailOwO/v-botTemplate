@@ -36,7 +36,7 @@
       <!-- switch login way end  -->
 
       <div class="login-way" v-if="!isNoraml">
-         <!-- name start -->
+        <!-- name start -->
         <div class="name-box">
           <i-input v-model="username" :placeholder="this.$t('login.page.username')" class="login-input"></i-input>
         </div>
@@ -60,7 +60,7 @@
     </div>
     <!-- login end -->
     <funnyRain :level="level"></funnyRain>
-    <funnyRainCode v-if="isActiveCode"></funnyRainCode>
+    <funnyRainCode v-model="isActiveCode" :activeCode="isActiveCode"></funnyRainCode>
     <!-- register box start -->
     <Modal
       :title="this.$t('login.page.registerDialog.title')"
@@ -234,6 +234,7 @@ export default {
         this.currentStep = 0;
       }
     }
-  }
+  },
+  props: []
 }
 </script>
