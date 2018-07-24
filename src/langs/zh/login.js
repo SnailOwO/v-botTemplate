@@ -27,9 +27,9 @@ const login = {
         },
         activeCodeDialog: {
             title: '获取邀请码',
-            simple: '简单',
-            middle: '中等',
-            hard: '还行',
+            simple: 'simple',
+            middle: 'middle',
+            hard: 'hard',
             firstStep: '难度选择',
             secondStep: 'demo生成',
             thirdStep: '开始作答',
@@ -52,7 +52,10 @@ const login = {
         phoneIsIllegal: '非法的手机号',
         //滑稽雨activeCode
         illegalDifficulty: '非法难度选择',
-        rememberEmoji: '请记住当前表情:'
+        rememberEmoji: '请记住当前表情:',
+        questtion: '问，demo表情总共出现几次？',
+        answer: '请填写数字',
+        illegalAnswer: '请填写相应的数值'
     }
 }
 export default login

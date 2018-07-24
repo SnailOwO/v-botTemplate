@@ -3,6 +3,7 @@
   <Modal
     v-model="activeCode"
     :mask-closable="false"
+    width="800"
     >
     <p slot="header">
       <span @click="close">{{ this.$t('login.page.activeCodeDialog.title') }}</span>
@@ -28,22 +29,15 @@
       <div class="diffcult-choice-box" v-if="currentStep == 2">
         <canvas width="293" height="300" id="codeCanvas"></canvas>
       </div>
-      <!-- <div class="pwd-box" v-if="currentStep == 1">
-        <i-input v-model="registerPwd" type="password" :placeholder="this.$t('login.page.registerDialog.registerPwd')"></i-input>
+      <div class="diffcult-choice-box" v-if="currentStep == 3">
+        <label class="questtion-label">{{ this.$t('login.info.questtion') }}</label>
+        <i-input v-model="answer" @keyup.native="answerPreg(answer)" :placeholder="this.$t('login.info.answer')" clearable style="width: 80px;"></i-input>
       </div>
-      <div class="pwd-box" v-if="currentStep == 1">
-        <i-input v-model="repeatPwd" type="password" :placeholder="this.$t('login.page.registerDialog.repeatPwd')"></i-input>
-      </div>
-      <div class="email-box" v-if="currentStep == 2">
-        <i-input v-model="email" :placeholder="this.$t('login.page.registerDialog.email')"></i-input>
-      </div>
-      <div class="phone-box" v-if="currentStep == 3">
-        <i-input v-model="phone" :placeholder="this.$t('login.page.registerDialog.phone')"></i-input>
-      </div>-->
     </div> 
     <div slot="footer">
-        <Button v-if="!currentStep" @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
-        <Button type="primary" @click="getCode">{{ this.$t('login.page.activeCodeDialog.confirm') }}</Button>
+        <p v-if="currentStep == 2">{{ stepTime }}</p>
+        <Button v-if="!currentStep && currentStep != 2" @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
+        <Button v-if="currentStep != 2" type="primary" @click="getCode">{{ this.$t('login.page.activeCodeDialog.confirm') }}</Button>
     </div>
   </Modal>
   <!-- code box end -->
@@ -60,42 +54,39 @@ export default {
         method: this.$store.state.activeCode.method,
         extraSetting: '',   //无论什么方式获取邀请码，这个就是承载该参数的
         currentStep: 0,
-        level: '简单',   //默认简单
-        levelObj: {
-          '简单': 1,
-          '中等': 3,
-          '困难': 5,
-          '极难': 10
-        },
+        level: '',   //用户选择难度
+        levelObj: {},
         extenstion: '.png',  
         baseEmojiPath: '/static/images/funny_rain/',
         codeCanvas: {},   //画布
         codeOgc: {},
         codeRainAry: [],
-        width: 293,
+        width: 0,
         height: 300,
         emojiNum: 13,
-        codeRainNum: 50,
+        codeRainNum: 30,
         codeTimeOut: '',
-        // stepTimeOut: ''
+        stepTimeOut: '',
+        stepTime: 0,   //倒计时
+        answer: '',
+        animateStop: ''
     }
   },
-  created() {
- 
-  }, 
-  mounted(){
-  
+  created() {}, 
+  mounted() {
+    let cur_method = this.$store.state.activeCode.method;
+    this.levelObj = this.$store.state.activeCode[cur_method];
+    console.log(this.levelObj);
   },
   beforeDestroy() {
     clearTimeout(this.codeTimeOut);
-    // clearTimeout(this.stepTimeOut);
+    clearTimeout(this.stepTimeOut);
   },
   methods: { 
     initCanvas() {
       //定义画布
       this.codeCanvas = document.getElementById('codeCanvas');
-      // this.codeCanvas.setAttribute('width', this.outerWidth);
-      // this.codeCanvas.setAttribute('height', this.outerHeight);
+      this.codeCanvas.setAttribute('width', this.width);
       this.codeOgc = this.codeCanvas.getContext('2d');
     },
     preStep() {   //上一步
@@ -113,27 +104,19 @@ export default {
           this.extraSetting = this.levelObj[this.level];
         }
       }
-      //if(this.currentStep == 1) {}    //查看demo表情,然后开始自动跳转至下一步
-      //自动跳转到下一步
-      // this.stepTimeOut = setTimeout(() => {
-      //   this.currentStep += 1; 
-      // }, 3000);
-      // if((this.currentStep + 1) == 2) {   //弹框中显示滑稽雨
-      //   console.log(2);
-      //   //清除之前的定时器
-      //   // clearTimeout(this.stepTimeOut);
-      //   this.initCanvas();
-      //   this.createRain();
-      //   console.log(this.codeRainAry);
-      //   this.move();
-      // }
       //确认当前操作，下一步
       if(this.currentStep == 3) {
-        alert('注册成功');
+        if(!this.answer) {
+          this.$Message.warning(this.$t('login.info.illegalAnswer'));
+          return false;
+        }
       } else {
         this.currentStep += 1;
-        console.log(this.currentStep);
       }
+    },
+    answerPreg(data) {
+      //通过正则，强制用户只能输入数字
+      this.answer = data.replace(/[^0-9]/g,'');
     },
     close() {
       this.$emit("input",false);
@@ -147,7 +130,7 @@ export default {
           this.r = 80;   //每个emoji的大小
           this.x = _this.random(0,(_this.width - this.r));   //随机从x轴降落
           this.y = 0;   //y轴
-          this.speed = base_speed += _this.extraSetting;
+          this.speed = base_speed += _this.extraSetting['speed'];
           //直接绘制出对应的图片
           let cur_emoji = _this.randomEmoji(1,_this.emojiNum);     //随机出一张emoji
           let cur_emoji_path = _this.baseEmojiPath + cur_emoji + _this.extenstion;
@@ -181,11 +164,14 @@ export default {
       }
     },
     move() {
-      this.codeOgc.clearRect(0, 0, 293,300);
+      this.codeOgc.clearRect(0, 0, this.width,300);
       for(var i = 0; i < this.codeRainAry.length; i++) {
         this.codeRainAry[i].draw(this.codeOgc);
       }
-      requestAnimationFrame(this.move);
+      this.animateStop = requestAnimationFrame(this.move);
+    },
+    pasued() {   //暂停动画
+      window.cancelAnimationFrame(this.animateStop);
     },
     random(min,max) {
       return Math.random() * (max - min) + min;
@@ -195,6 +181,28 @@ export default {
     },
     randomEmojiSrc(min,max) {
       return this.baseEmojiPath + this.randomEmoji(min,max) + this.extenstion;
+    },
+    timeOutMethod() {
+      this.stepTimeOut = setTimeout(() => {
+        if(this.levelObj[this.level]['time'] <= 0) {
+          clearTimeout(this.stepTimeOut);
+          // this.currentStep += 1; 
+          this.pasued();
+          //todo:增加弹窗，不要再跳到下一页了，方便辨认
+        } else {
+          this.stepTime = this.levelObj[this.level]['time'] -= 1000;
+          this.stepTime = this.stepTime / 1000;
+          this.stepTimeOut = setTimeout(() => {
+            this.timeOutMethod();
+          }, 1000);
+        }
+      }, 1000);
+    }
+  },
+  computed: {
+    resizeWidth: function() {
+      console.log(this.width);
+      return this.width = document.getElementById('rain-code-box').offsetWidth;
     }
   },
   watch: {
@@ -203,15 +211,20 @@ export default {
     //     this.level = '';
     //   }
     // }
-    currentStep: function() {
+    currentStep: function() {   
       if(this.currentStep == 2) {
         this.$nextTick(()=>{
+          this.resizeWidth;   //动态监听父类宽度
           this.initCanvas();
           this.createRain();
-          console.log(this.codeRainAry);
           this.move();
         });
+        this.timeOutMethod();
+        console.log(this.stepTime);
       }
+      // if(this.currentStep == 3) {
+      //   clearTimeout(this.stepTimeOut);
+      // }
     }
   },
   props: ['activeCode']
