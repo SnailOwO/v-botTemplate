@@ -42,8 +42,8 @@
       </div>-->
     </div> 
     <div slot="footer">
-        <Button v-if="currentStep && currentStep != 1" @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
-        <Button v-if="currentStep != 1" type="primary" @click="getCode">{{ this.$t('login.page.activeCodeDialog.confirm') }}</Button>
+        <Button v-if="!currentStep" @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
+        <Button type="primary" @click="getCode">{{ this.$t('login.page.activeCodeDialog.confirm') }}</Button>
     </div>
   </Modal>
   <!-- code box end -->
@@ -77,7 +77,7 @@ export default {
         emojiNum: 13,
         codeRainNum: 50,
         codeTimeOut: '',
-        stepTimeOut: ''
+        // stepTimeOut: ''
     }
   },
   created() {
@@ -88,7 +88,7 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(this.codeTimeOut);
-    clearTimeout(this.stepTimeOut);
+    // clearTimeout(this.stepTimeOut);
   },
   methods: { 
     initCanvas() {
@@ -113,26 +113,26 @@ export default {
           this.extraSetting = this.levelObj[this.level];
         }
       }
-      if((this.currentStep + 1) == 2) {  //查看demo表情,然后开始自动跳转至下一步
-        //自动跳转到下一步
-        this.stepTimeOut = setTimeout(() => {
-        this.currentStep += 1;
-        }, 3000);
-      }   
-      if(this.currentStep == 2) {   //弹框中显示滑稽雨
-        console.log(2);
-        //清除之前的定时器
-        clearTimeout(this.stepTimeOut);
-        this.initCanvas();
-        this.createRain();
-        console.log(this.codeRainAry);
-        this.move();
-      }
+      //if(this.currentStep == 1) {}    //查看demo表情,然后开始自动跳转至下一步
+      //自动跳转到下一步
+      // this.stepTimeOut = setTimeout(() => {
+      //   this.currentStep += 1; 
+      // }, 3000);
+      // if((this.currentStep + 1) == 2) {   //弹框中显示滑稽雨
+      //   console.log(2);
+      //   //清除之前的定时器
+      //   // clearTimeout(this.stepTimeOut);
+      //   this.initCanvas();
+      //   this.createRain();
+      //   console.log(this.codeRainAry);
+      //   this.move();
+      // }
       //确认当前操作，下一步
       if(this.currentStep == 3) {
         alert('注册成功');
-      } else if(this.currentStep != 1) {
+      } else {
         this.currentStep += 1;
+        console.log(this.currentStep);
       }
     },
     close() {
@@ -164,7 +164,7 @@ export default {
           if (this.y < (_this.height - this.r)) {
             this.y += this.speed;
           } else {
-            this.init(_this.oGc);
+            this.init(_this.codeOgc);
           }
         }
       };
@@ -203,6 +203,16 @@ export default {
     //     this.level = '';
     //   }
     // }
+    currentStep: function() {
+      if(this.currentStep == 2) {
+        this.$nextTick(()=>{
+          this.initCanvas();
+          this.createRain();
+          console.log(this.codeRainAry);
+          this.move();
+        });
+      }
+    }
   },
   props: ['activeCode']
 }
