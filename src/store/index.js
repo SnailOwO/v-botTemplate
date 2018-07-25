@@ -8,24 +8,28 @@ export default new Vuex.Store({
             method: 'funny',   //后期可以添加更多的邀请码活动方式
             funny: {   //邀请码难易等级
                 'simple': {
-                    speed: 1,   //速度
+                    speed: 0,   //速度
                     time: 3000,   //定时器时间，单位: ms
-                    reward: [0,1]   //奖励
+                    reward: [0,1],   //奖励区间
+                    rainNum: 10
                 },
                 'middle': {
-                    speed: 3,   //速度
-                    time: 5000,   //定时器时间，单位: ms
-                    reward: [1,2]   //奖励
+                    speed: 1,   //速度
+                    time: 3000,   //定时器时间，单位: ms
+                    reward: [1,2],   //奖励区间
+                    rainNum: 10
                 },
                 'hard': {
+                    speed: 2,   //速度
+                    time: 5000,   //定时器时间，单位: ms
+                    reward: [2,3],   //奖励区间
+                    rainNum: 15
+                },
+                'difficult': {
                     speed: 5,   //速度
                     time: 8000,   //定时器时间，单位: ms
-                    reward: [2,3]   //奖励
-                },
-                'diffcult': {
-                    speed: 10,   //速度
-                    time: 10000,   //定时器时间，单位: ms
-                    reward: [3,5]   //奖励
+                    reward: [3,5],   //奖励区间
+                    rainNum: 50
                 }
             },
         },

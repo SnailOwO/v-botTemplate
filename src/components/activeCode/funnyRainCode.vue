@@ -1,7 +1,7 @@
 <template>
   <!-- code box start -->
   <Modal
-    v-model="activeCode"
+    v-model="show"
     :mask-closable="false"
     width="800"
     >
@@ -35,7 +35,9 @@
       </div>
     </div> 
     <div slot="footer">
-        <p v-if="currentStep == 2">{{ stepTime }}</p>
+        <p v-if="currentStep == 2" class="count-down">{{ this.$t('login.page.activeCodeDialog.countDown') }} {{ stepTime }}</p>
+        <Button v-if="(currentStep == 2 || (currentStep == 2 && pasusedShow)) && isPaused" @click="pasued" type="info">暂停</Button>
+         <Button v-if="currentStep == 2 && !isPaused" @click="go" type="info">继续</Button>
         <Button v-if="!currentStep && currentStep != 2" @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
         <Button v-if="currentStep != 2" type="primary" @click="getCode">{{ this.$t('login.page.activeCodeDialog.confirm') }}</Button>
     </div>
@@ -51,6 +53,7 @@ export default {
   },
   data () {
     return {
+        show: true,
         method: this.$store.state.activeCode.method,
         extraSetting: '',   //无论什么方式获取邀请码，这个就是承载该参数的
         currentStep: 0,
@@ -64,23 +67,26 @@ export default {
         width: 0,
         height: 300,
         emojiNum: 13,
-        codeRainNum: 30,
+        codeRainNum: 0,
         codeTimeOut: '',
         stepTimeOut: '',
-        stepTime: 0,   //倒计时
+        nextStepTimeOut: '',
+        stepTime: '',   //倒计时
         answer: '',
-        animateStop: ''
+        animateStop: '',
+        pasusedShow: true,
+        isPaused: true,
     }
   },
   created() {}, 
   mounted() {
     let cur_method = this.$store.state.activeCode.method;
     this.levelObj = this.$store.state.activeCode[cur_method];
-    console.log(this.levelObj);
   },
   beforeDestroy() {
     clearTimeout(this.codeTimeOut);
     clearTimeout(this.stepTimeOut);
+    clearTimeout(this.nextStepTimeOut);
   },
   methods: { 
     initCanvas() {
@@ -102,6 +108,7 @@ export default {
           return false;
         } else {
           this.extraSetting = this.levelObj[this.level];
+          this.codeRainNum = this.extraSetting['rainNum'];
         }
       }
       //确认当前操作，下一步
@@ -171,7 +178,12 @@ export default {
       this.animateStop = requestAnimationFrame(this.move);
     },
     pasued() {   //暂停动画
+      clearTimeout(this.stepTimeOut);
       window.cancelAnimationFrame(this.animateStop);
+    },
+    go() {
+      this.move();
+      this.timeOutMethod();
     },
     random(min,max) {
       return Math.random() * (max - min) + min;
@@ -186,12 +198,14 @@ export default {
       this.stepTimeOut = setTimeout(() => {
         if(this.levelObj[this.level]['time'] <= 0) {
           clearTimeout(this.stepTimeOut);
-          // this.currentStep += 1; 
-          this.pasued();
-          //todo:增加弹窗，不要再跳到下一页了，方便辨认
+          this.pasusedShow = false;   //隐藏暂停按钮
+          this.pasued();   //暂停动画
+          //1s之后跳至下一页
+          this.nextStepTimeOut = setTimeout(() => {
+            this.currentStep += 1; 
+          },1000);
         } else {
-          this.stepTime = this.levelObj[this.level]['time'] -= 1000;
-          this.stepTime = this.stepTime / 1000;
+          this.stepTime = (this.levelObj[this.level]['time'] -= 1000) / 1000;
           this.stepTimeOut = setTimeout(() => {
             this.timeOutMethod();
           }, 1000);
@@ -219,6 +233,7 @@ export default {
           this.createRain();
           this.move();
         });
+        this.stepTime = this.levelObj[this.level]['time'] / 1000;
         this.timeOutMethod();
         console.log(this.stepTime);
       }
@@ -227,6 +242,6 @@ export default {
       // }
     }
   },
-  props: ['activeCode']
+  props: ['value']
 }
 </script>

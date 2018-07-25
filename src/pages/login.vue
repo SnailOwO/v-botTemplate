@@ -60,7 +60,7 @@
     </div>
     <!-- login end -->
     <funnyRain :level="level"></funnyRain>
-    <funnyRainCode v-model="isActiveCode" :activeCode="isActiveCode"></funnyRainCode>
+    <funnyRainCode v-if="isActiveCode" v-model="isActiveCode" :isActiveCode="isActiveCode"></funnyRainCode>
     <!-- register box start -->
     <Modal
       :title="this.$t('login.page.registerDialog.title')"
@@ -214,6 +214,7 @@ export default {
     },
     showActiveCode() {   //显示邀请码弹窗
       this.isActiveCode = !this.isActiveCode;
+      console.log(this.isActiveCode);
     }
   },
   watch: {

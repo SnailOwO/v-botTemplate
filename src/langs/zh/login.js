@@ -34,7 +34,8 @@ const login = {
             secondStep: 'demo生成',
             thirdStep: '开始作答',
             fourthStep: '结果',
-            confirm: '确认'
+            confirm: '确认',
+            countDown: '倒计时：'
         }
     },
     info: {
