@@ -16,12 +16,7 @@ export default {
       extenstion: '.png',
       baseEmojiPath: '/static/images/funny_rain/',
       timeOut: '',
-      customSpeed: {
-        1: 0,   //正常
-        2: 3,   //还行
-        3: 5,   //稍快
-        4: 10   //非常快
-      }
+      level: this.$store.state.level,   //这个是登录页的下落速度
     }
   },
   created() {},  
@@ -54,7 +49,7 @@ export default {
           this.r = 80;   //每个emoji的大小
           this.x = _this.random(0,(_this.width - this.r));   //随机从x轴降落
           this.y = 0;   //y轴
-          this.speed = base_speed += _this.customSpeed[_this.level];
+          this.speed = base_speed +=_this.level;
           //直接绘制出对应的图片
           let cur_emoji = _this.randomEmoji(1,_this.emojiNum);     //随机出一张emoji
           let cur_emoji_path = _this.baseEmojiPath + cur_emoji + _this.extenstion;
@@ -109,6 +104,6 @@ export default {
       return this.height = window.innerHeight;
     }
   },
-  props: ['level']
+  props: []
 }
 </script>

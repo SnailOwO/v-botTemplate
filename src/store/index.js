@@ -33,7 +33,7 @@ export default new Vuex.Store({
                 }
             },
         },
-        level: 1   //这个是登录页的下落速度
+        level: 0   //这个是登录页的下落速度
     },
     getters: {},
     mutations: {

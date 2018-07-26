@@ -59,7 +59,7 @@
       <!-- login-btn end -->
     </div>
     <!-- login end -->
-    <funnyRain :level="level"></funnyRain>
+    <funnyRain></funnyRain>
     <funnyRainCode v-if="isActiveCode" v-model="isActiveCode"></funnyRainCode>
     <!-- register box start -->
     <Modal
@@ -124,7 +124,6 @@ export default {
       phone: '',   //手机号(可以为空)
       currentStep: 0,   //0:account 1:pwd 2:email 3:extra info  
       //邀请码
-      level: this.$store.state.level,   //这个是登录页的下落速度
       isActiveCode: false 
     }
   },
