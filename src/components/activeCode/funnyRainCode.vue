@@ -1,18 +1,26 @@
 <template>
   <!-- code box start -->
-  <Modal
+  <div v-if="show">
+    <Modal
     v-model="show"
     :mask-closable="false"
-    width="800"
+    :closable="false"
+    width="750"
     >
     <p slot="header">
-      <span @click="close">{{ this.$t('login.page.activeCodeDialog.title') }}</span>
+      <span>
+        {{ this.$t('login.page.activeCodeDialog.title') }}
+      </span>
+      <label @click="close" class="close">
+        <Icon type="close"></Icon>
+      </label>
     </p>
     <Steps :current="currentStep">
       <Step :title="this.$t('login.page.activeCodeDialog.firstStep')"></Step>
       <Step :title="this.$t('login.page.activeCodeDialog.secondStep')"></Step>
       <Step :title="this.$t('login.page.activeCodeDialog.thirdStep')"></Step>
       <Step :title="this.$t('login.page.activeCodeDialog.fourthStep')"></Step>
+      <Step :title="this.$t('login.page.activeCodeDialog.fifthStep')"></Step>
     </Steps>
     <div id="rain-code-box">
       <div class="diffcult-choice-box" v-if="!currentStep">
@@ -33,15 +41,19 @@
         <label class="questtion-label">{{ this.$t('login.info.questtion') }}</label>
         <i-input v-model="answer" @keyup.native="answerPreg(answer)" :placeholder="this.$t('login.info.answer')" clearable style="width: 80px;"></i-input>
       </div>
+      <div class="diffcult-choice-box" v-if="currentStep == 4">
+        <label>很遗憾!</label>
+      </div>
     </div> 
     <div slot="footer">
         <p v-if="currentStep == 2" class="count-down">{{ this.$t('login.page.activeCodeDialog.countDown') }} {{ stepTime }}</p>
-        <Button v-if="(currentStep == 2 || (currentStep == 2 && pasusedShow)) && isPaused" @click="pasued" type="info">暂停</Button>
-         <Button v-if="currentStep == 2 && !isPaused" @click="go" type="info">继续</Button>
-        <Button v-if="!currentStep && currentStep != 2" @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
+        <Button v-if="(currentStep == 2 || (currentStep == 2 && pasusedShow)) && isPaused" @click="pasued(true)" type="info">暂停</Button>
+        <Button v-if="currentStep == 2 && !isPaused" @click="go" type="info">继续</Button>
+        <Button v-if="currentStep == 1" @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
         <Button v-if="currentStep != 2" type="primary" @click="getCode">{{ this.$t('login.page.activeCodeDialog.confirm') }}</Button>
     </div>
   </Modal>
+  </div>
   <!-- code box end -->
 </template>
 
@@ -54,7 +66,6 @@ export default {
   data () {
     return {
         show: true,
-        method: this.$store.state.activeCode.method,
         extraSetting: '',   //无论什么方式获取邀请码，这个就是承载该参数的
         currentStep: 0,
         level: '',   //用户选择难度
@@ -76,9 +87,10 @@ export default {
         animateStop: '',
         pasusedShow: true,
         isPaused: true,
+        lastPausedTime: '',   //上次暂停时间
     }
   },
-  created() {}, 
+  // created() {}, 
   mounted() {
     let cur_method = this.$store.state.activeCode.method;
     this.levelObj = this.$store.state.activeCode[cur_method];
@@ -111,12 +123,15 @@ export default {
           this.codeRainNum = this.extraSetting['rainNum'];
         }
       }
-      //确认当前操作，下一步
       if(this.currentStep == 3) {
-        if(!this.answer) {
+         if(!this.answer) {
           this.$Message.warning(this.$t('login.info.illegalAnswer'));
           return false;
         }
+      }
+      //确认当前操作，下一步
+      if(this.currentStep == 4) {
+        this.close();
       } else {
         this.currentStep += 1;
       }
@@ -126,6 +141,7 @@ export default {
       this.answer = data.replace(/[^0-9]/g,'');
     },
     close() {
+      this.show = false;
       this.$emit("input",false);
     },
     initRain() {
@@ -177,12 +193,29 @@ export default {
       }
       this.animateStop = requestAnimationFrame(this.move);
     },
-    pasued() {   //暂停动画
+    pasued(isHand) {   //暂停动画
+      if(isHand) {   //手动暂停
+        if(!this.stepTime) {
+          this.$Message.warning(this.$t('login.info.unableToSuspend'));
+          return false;
+        }
+        if(this.lastPausedTime && (this.lastPausedTime == this.stepTime)) {
+          this.$Message.warning(this.$t('login.info.suspendInterval'));
+          return false;
+        }
+      }
+      this.isPaused = false;
+      this.lastPausedTime = this.stepTime;   //记录当前暂停所剩时间
       clearTimeout(this.stepTimeOut);
       window.cancelAnimationFrame(this.animateStop);
     },
     go() {
+      if(!this.stepTime) {
+        this.$Message.warning(this.$t('login.info.unableToContinue'));
+        return false;
+      }
       this.move();
+      this.isPaused = true;
       this.timeOutMethod();
     },
     random(min,max) {
@@ -196,16 +229,16 @@ export default {
     },
     timeOutMethod() {
       this.stepTimeOut = setTimeout(() => {
-        if(this.levelObj[this.level]['time'] <= 0) {
+        if(this.stepTime <= 0) {
           clearTimeout(this.stepTimeOut);
           this.pasusedShow = false;   //隐藏暂停按钮
-          this.pasued();   //暂停动画
+          this.pasued(false);   //暂停动画
           //1s之后跳至下一页
           this.nextStepTimeOut = setTimeout(() => {
             this.currentStep += 1; 
           },1000);
         } else {
-          this.stepTime = (this.levelObj[this.level]['time'] -= 1000) / 1000;
+          this.stepTime -= 1;
           this.stepTimeOut = setTimeout(() => {
             this.timeOutMethod();
           }, 1000);
@@ -215,16 +248,10 @@ export default {
   },
   computed: {
     resizeWidth: function() {
-      console.log(this.width);
       return this.width = document.getElementById('rain-code-box').offsetWidth;
     }
   },
   watch: {
-    // activeCode: function() {   //当activeCode都为false的时候
-    //   if(!activeCode) {
-    //     this.level = '';
-    //   }
-    // }
     currentStep: function() {   
       if(this.currentStep == 2) {
         this.$nextTick(()=>{
@@ -235,11 +262,7 @@ export default {
         });
         this.stepTime = this.levelObj[this.level]['time'] / 1000;
         this.timeOutMethod();
-        console.log(this.stepTime);
       }
-      // if(this.currentStep == 3) {
-      //   clearTimeout(this.stepTimeOut);
-      // }
     }
   },
   props: ['value']

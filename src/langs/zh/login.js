@@ -32,8 +32,9 @@ const login = {
             hard: 'hard',
             firstStep: '难度选择',
             secondStep: 'demo生成',
-            thirdStep: '开始作答',
-            fourthStep: '结果',
+            thirdStep: '开始表演',
+            fourthStep: '作答',
+            fifthStep: '结果',
             confirm: '确认',
             countDown: '倒计时：'
         }
@@ -56,7 +57,10 @@ const login = {
         rememberEmoji: '请记住当前表情:',
         questtion: '问，demo表情总共出现几次？',
         answer: '请填写数字',
-        illegalAnswer: '请填写相应的数值'
+        illegalAnswer: '请填写相应的数值',
+        unableToSuspend: 'Time Out,当前无法暂停',
+        unableToContinue: 'Time Out,当前无法继续',
+        suspendInterval: '暂停间隔必须在1s以上',
     }
 }
 export default login

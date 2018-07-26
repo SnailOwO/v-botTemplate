@@ -60,7 +60,7 @@
     </div>
     <!-- login end -->
     <funnyRain :level="level"></funnyRain>
-    <funnyRainCode v-if="isActiveCode" v-model="isActiveCode" :isActiveCode="isActiveCode"></funnyRainCode>
+    <funnyRainCode v-if="isActiveCode" v-model="isActiveCode"></funnyRainCode>
     <!-- register box start -->
     <Modal
       :title="this.$t('login.page.registerDialog.title')"
@@ -212,9 +212,8 @@ export default {
         this.currentStep = this.currentStep <= 0 ? 0 : this.currentStep;
       }
     },
-    showActiveCode() {   //显示邀请码弹窗
+    showActiveCode() {   //显示邀请码弹窗 todo:动态根据store中，全局设置邀请码的获取方式
       this.isActiveCode = !this.isActiveCode;
-      console.log(this.isActiveCode);
     }
   },
   watch: {
