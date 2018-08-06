@@ -35,7 +35,7 @@
       </div>
       <!-- switch login way end  -->
 
-      <div class="login-way" v-if="!isNoraml">
+      <div class="login-way" v-if="isNoraml">
         <!-- name start -->
         <div class="name-box">
           <i-input v-model="username" :placeholder="this.$t('login.page.username')" class="login-input"></i-input>
@@ -111,7 +111,7 @@ export default {
   data () {
     return {
       first_index: 0,
-      isNoraml: false,   //默认使用账户名登录
+      isNoraml: true,   //默认使用账户名登录
       username: '',
       password: '',
       code: '',
@@ -135,7 +135,9 @@ export default {
   },
   methods: {
     login() {
-      if(!this.isNoraml) {   //当前选择的是，普通用户登录
+      let obj = {};
+      obj.method = this.isNoraml;
+      if(this.isNoraml) {   //当前选择的是，普通用户登录
         if(!this.username) {
           this.$Message.warning(this.$t('login.info.usernameIsEmpty'));
           return false;
@@ -144,13 +146,20 @@ export default {
           this.$Message.warning(this.$t('login.info.pwdIsEmpty'));
           return false;
         }
+        obj.username = this.username;
+        obj.password = this.password;
       } else {   //当前选择的是，邀请码登录
         if(!this.code) {
           this.$Message.warning(this.$t('login.info.codeIsEmpty'));
           return false;
         }
+        obj.code = this.code;
       }
-      //todo: 发送登录请求
+      this.$http({url: '/login',data: obj, method: 'post'}, (res) => {
+        console.log(res);
+      }, (error) => {
+        console.log(error);
+      })
     },
     showRegister() {
       this.isRegister = true;
