@@ -22,12 +22,16 @@ let removePending = (config) => {
 axios.interceptors.request.use(config => {
     //发起请求时，取消掉当前正在进行的相同请求
     removePending(config);
-    //:todo 每次请求设置token
     config.cancelToken = new CancelToken((c)=>{
       // 这里的ajax标识我是用请求地址&请求方式拼接的字符串，当然你可以选择其他的一些方式
       promiseArr.push({ u: config.url + '&' + config.method, f: c });  
     });
-    return config
+    // headr头中，设置token
+    let token  = sessionStorage.getItem('token');
+    if(token) {
+        config.headers['Authorization'] = token;   //todo: 尚未确定jwt设置header中哪个字段
+    }
+    return config;
 }, error => {
     removePending(config);
     return Promise.reject(error)
@@ -35,12 +39,16 @@ axios.interceptors.request.use(config => {
 
 //响应拦截器即异常处理
 axios.interceptors.response.use(response => {
-    console.log(response);
     removePending(response.config);
-    let token = response.headers.authorization;
-    if (token) {   //间隔 5分钟之内，可以重新续时token
-      // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
-      //this.$store.dispatch('refreshToken', token)
+    try {
+        let token = response.data.data.token;
+        if (token) {   //间隔 5分钟之内，可以重新续时token
+            // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
+            //this.$store.dispatch('refreshToken', token)
+            sessionStorage.setItem('token',token);
+        }
+    } catch(e) {
+        console.log('木有返回token',e);
     }
     return response
 }, err => {

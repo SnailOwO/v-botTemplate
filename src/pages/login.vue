@@ -137,7 +137,7 @@ export default {
     login() {
       let obj = {};
       obj.method = this.isNoraml;
-      if(this.isNoraml) {   //当前选择的是，普通用户登录
+      if(this.isNoraml) {   // 账号登录
         if(!this.username) {
           this.$Message.warning(this.$t('login.info.usernameIsEmpty'));
           return false;
@@ -148,7 +148,7 @@ export default {
         }
         obj.username = this.username;
         obj.password = this.password;
-      } else {   //当前选择的是，邀请码登录
+      } else {   // 邀请码登录
         if(!this.code) {
           this.$Message.warning(this.$t('login.info.codeIsEmpty'));
           return false;
@@ -156,9 +156,9 @@ export default {
         obj.code = this.code;
       }
       this.$http({url: '/login',data: obj, method: 'post'}, (res) => {
-        console.log(res);
+        
       }, (error) => {
-        console.log(error);
+        console.log('login',error);
       })
     },
     showRegister() {
