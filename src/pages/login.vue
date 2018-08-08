@@ -156,8 +156,13 @@ export default {
         obj.code = this.code;
       }
       this.$http({url: '/login',data: obj, method: 'post'}, (res) => {
-        
+        // let token = res.data.data.token;
+        // if(token) {
+        // }
+        console.log('xxx',res);
       }, (error) => {
+        console.log('xcc',error);
+        //this.$Message.warning(error.response.data.msg);
         console.log('login',error);
       })
     },

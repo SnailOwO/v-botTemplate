@@ -40,21 +40,26 @@ axios.interceptors.request.use(config => {
 //响应拦截器即异常处理
 axios.interceptors.response.use(response => {
     removePending(response.config);
-    try {
-        let token = response.data.data.token;
-        if (token) {   //间隔 5分钟之内，可以重新续时token
-            // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
-            //this.$store.dispatch('refreshToken', token)
-            sessionStorage.setItem('token',token);
-        }
-    } catch(e) {
-        console.log('木有返回token',e);
-    }
-    return response
+    // try {
+    //     let token = response.data.data.token;
+    //     if (token) {   //间隔 5分钟之内，可以重新续时token
+    //         // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
+    //         //this.$store.dispatch('refreshToken', token)
+    //         sessionStorage.setItem('token',token);
+    //     }
+    // } catch(e) {
+    //     console.log('木有返回token',e);
+    // }
+    return response;  
 }, err => {
     // todo:公用异常处理
     removePending(err.response.config);
-    return Promise.resolve(err.response)
+    return Promise.resolve(err.response);
+    // if(err.response) {
+    //     if(err.response.status > 399 && err.response.status < 600) {
+    //         return Promise.resolve(err.response);
+    //     }
+    // }
 })
 
 // 导出 axios
@@ -62,6 +67,7 @@ export const httpRequest = (config,cb,errorCb) => {
   axios(config).then((response) => {
       if(cb) cb(response);
   }).catch((error) => {
+      console.log(error);
       if (errorCb) errorCb(error);
   });
 }    
