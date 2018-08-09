@@ -22,7 +22,7 @@
         <i class="dropdown ivu-icon ivu-icon-arrow-down-b"></i>
         <ul class="user-menu">
           <li>{{ this.$t('common.header.userMeun.resetPwd') }}</li>
-          <li>{{ this.$t('common.header.userMeun.logout') }}</li>
+          <li @click="logout">{{ this.$t('common.header.userMeun.logout') }}</li>
         </ul>
       </div>
     </div>
@@ -55,6 +55,10 @@ export default {
   methods: {
     randomEmoji(min,max) {
       return this.baseEmojiPath + Math.floor(Math.random() * (max - min + 1) + min) + this.extenstion;
+    },
+    logout() {
+      sessionStorage.clear();
+      this.$router.push({name: 'login'});
     }
   }
 }

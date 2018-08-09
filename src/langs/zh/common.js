@@ -1,6 +1,6 @@
 const common = {
-    ajaxInfo: {
-        400: '资源未找到'
+    info: {
+        userInformationFailure: '哦豁~用户信息已失效'
     },
     menu: {
         index: '首页',

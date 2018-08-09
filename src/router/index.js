@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import iView from 'iview'
+import i18n from 'langs/lang'
 import Router from 'vue-router'
 
 Vue.use(Router)
@@ -9,11 +11,11 @@ const router = new Router({
     {
       path: '/',
       name: 'main',
-      redirect: '/',
+      redirect: '/index',
       component: resolve => require(['../pages/mainLayout'], resolve),
       children: [
         {
-          path: '/',
+          path: 'index',
           name: 'index',
           meta: { auth: true },
           component: resolve => require(['../components/index/index'], resolve),
@@ -47,14 +49,30 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  iView.LoadingBar.start();
   //todo: 验证用户,不仅仅是用token,后续可能还需修改
   let token  = sessionStorage.getItem('token');
+  let user_info = sessionStorage.getItem('user_info');
   if(to.matched.some(record => record.meta.auth)) {
-    if(!token) {
+    if(!token || !user_info) {
       next({ path: '/login' });
+      iView.Message.warning({
+        content: i18n.t('common.info.userInformationFailure'),
+        duration: 3
+      });  
+    } 
+  }
+  // 当前登录状态。不允许跳转到login页面
+  if(to.name === 'login') {
+    if(token && user_info) {
+      next({ path: from.path });
     } 
   }
   next();
 })
+
+router.afterEach(route => {
+  iView.LoadingBar.finish();
+});
 
 export default router;

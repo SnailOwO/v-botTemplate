@@ -128,10 +128,10 @@ export default {
     }
   },
   created() {
-    
+   
   },
   mounted() {
-   
+    
   },
   methods: {
     login() {
@@ -156,13 +156,14 @@ export default {
         obj.code = this.code;
       }
       this.$http({url: '/login',data: obj, method: 'post'}, (res) => {
-        // let token = res.data.data.token;
-        // if(token) {
-        // }
-        console.log('xxx',res);
+        if(res.status === 200) {
+          let data =  res.data.data;
+          sessionStorage.setItem('token',data.token);
+          sessionStorage.setItem('user_info',data.user_info);   //用户信息
+          this.$router.push('/'); 
+        }
       }, (error) => {
-        console.log('xcc',error);
-        //this.$Message.warning(error.response.data.msg);
+        this.$Message.warning(error.data.msg);  
         console.log('login',error);
       })
     },
@@ -248,6 +249,7 @@ export default {
       }
     }
   },
+  computed: {},
   props: []
 }
 </script>

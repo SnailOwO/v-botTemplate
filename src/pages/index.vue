@@ -42,6 +42,9 @@ export default {
   components: {
     header
   },
+  created() {
+    
+  },
   data () {
     return {
         isCollapsed: false

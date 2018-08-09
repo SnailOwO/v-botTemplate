@@ -33,11 +33,17 @@ export default new Vuex.Store({
                 }
             },
         },
-        level: 0   //这个是登录页的下落速度
+        level: 0,   //这个是登录页的下落速度
+        //userInfo: {},   //统一的用户信息
     },
     getters: {},
+    actions: {   //异步操作
+
+    },
     mutations: {
-        
+        // setUserInfo(state,user_info) {
+        //     state.userInfo =  user_info;
+        // }
     },
     modules: {
        

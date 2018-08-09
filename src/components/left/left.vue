@@ -1,5 +1,5 @@
 <template>
-    <Menu theme="dark" width="auto" :class="menuitemClasses">
+    <Menu :active-name="this.$t('common.menu.index')" theme="dark" width="auto" :class="menuitemClasses">
         <MenuItem :name="this.$t('common.menu.index')"> 
             <Icon type="home"></Icon>{{ this.$t('common.menu.index') }}
         </MenuItem>
