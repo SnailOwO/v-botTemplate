@@ -46,8 +46,10 @@ const login = {
         codeIsEmpty: '请输入您的邀请码',
         //注册
         accountIsEmpty: '用户名不能为空',
+        accountIsIllegal: '用户名只能由数字、字母、下划线组成',
         accountLengthIllegal: '用户名不能超过32位字符',
         pwdIsEmpty: '密码不能为空',
+        pwdIsSimple: '密码必须由6位以上字母、数字构成',
         twicePwdIsWrong: '两次密码不一致',
         emailIsEmpty: '邮箱不能为空',
         emailIsIllegal: '邮箱格式不合法',

@@ -180,12 +180,21 @@ export default {
           this.$Message.warning(this.$t('login.info.accountLengthIllegal'));
           return false;
         }
+        let account_reg = /^[a-zA-Z0-9_]+$/;
+        if(!account_reg.test(this.account)) {
+          this.$Message.warning(this.$t('login.info.accountIsIllegal'));
+          return false;
+        }
         //todo: 特殊字符判断
       }
       if(this.currentStep == 1) {
-        //todo: 密码强度判断
         if(!this.registerPwd) {
           this.$Message.warning(this.$t('login.info.pwdIsEmpty'));
+          return false;
+        }
+        let pwd_reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,}$/;
+        if(!pwd_reg.test(this.registerPwd)) {
+          this.$Message.warning(this.$t('login.info.pwdIsSimple'));
           return false;
         }
         if(this.registerPwd != this.repeatPwd) {
@@ -215,7 +224,17 @@ export default {
       }
       //下一步
       if(this.currentStep == 3) {
-        alert('注册成功');
+        this.$http({url: '/register',data: obj, method: 'post'}, (res) => {
+          if(res.status === 200) {
+            let data =  res.data.data;
+            // sessionStorage.setItem('token',data.token);
+            // sessionStorage.setItem('user_info',data.user_info);   //用户信息
+            // this.$router.push('/'); 
+          }
+        }, (error) => {
+          this.$Message.warning(error.data.msg);  
+          console.log('register',error);
+        })
       } else {
         this.currentStep += 1;
       }
