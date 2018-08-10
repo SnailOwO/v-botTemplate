@@ -18,6 +18,7 @@ const login = {
             repeatPwd: '请再次输入您的密码',
             email: '请输入您的邮箱',
             phone: '请输入您的手机号（非必填）',
+            inviteCode: '邀请码(若未填写,注册成功后需要审核)',
             preStep: '上一步',
             confirm: '确认',
             firstStep: '注册账号',

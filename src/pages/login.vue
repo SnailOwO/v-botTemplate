@@ -89,6 +89,9 @@
         <div class="phone-box" v-if="currentStep == 3">
           <i-input v-model="phone" :placeholder="this.$t('login.page.registerDialog.phone')"></i-input>
         </div>
+        <div class="phone-box" v-if="currentStep == 3">
+          <i-input v-model="inviteCode" :placeholder="this.$t('login.page.registerDialog.inviteCode')"></i-input>
+        </div>
       </div>
       <div slot="footer">
           <Button v-if="currentStep"  @click="preStep" style="float:left;">{{ this.$t('login.page.registerDialog.preStep') }}</Button>
@@ -122,6 +125,7 @@ export default {
       repeatPwd: '',
       email: '',
       phone: '',   //手机号(可以为空)
+      inviteCode: '',   //邀请码、可以为空。为空时，注册的用户为游客，需要超级管理员审核
       currentStep: 0,   //0:account 1:pwd 2:email 3:extra info  
       //邀请码
       isActiveCode: false 
@@ -163,7 +167,9 @@ export default {
           this.$router.push('/'); 
         }
       }, (error) => {
-        this.$Message.warning(error.data.msg);  
+        if(error.data.msg) {
+          this.$Message.warning(error.data.msg);  
+        }
         console.log('login',error);
       })
     },
@@ -213,26 +219,24 @@ export default {
           return false;
         }
       }
-      if(this.currentStep == 3) {
-        if(this.phone) {   //手机号位非必填项
-        let phone_reg = /^1\d{10}$/;
-          if(!phone_reg.test(this.phone)) {
-            this.$Message.warning(this.$t('login.info.phoneIsIllegal'));
-            return false;
-          }
-        }
-      }
       //下一步
       if(this.currentStep == 3) {
+        let obj = {};
+        obj.username = this.account;
+        obj.password = this.registerPwd;
+        obj.password_confirmation = this.repeatPwd;
+        obj.email = this.email;
+        obj.extra = {
+          phone: this.phone,
+          inviteCode: this.inviteCode
+        };
         this.$http({url: '/register',data: obj, method: 'post'}, (res) => {
-          if(res.status === 200) {
-            let data =  res.data.data;
-            // sessionStorage.setItem('token',data.token);
-            // sessionStorage.setItem('user_info',data.user_info);   //用户信息
-            // this.$router.push('/'); 
-          }
+          this.$Message.success(res.data.msg);
+          this.isRegister = !this.isRegister;
         }, (error) => {
-          this.$Message.warning(error.data.msg);  
+          if(error.data.msg) {
+            this.$Message.warning(error.data.msg);  
+          }
           console.log('register',error);
         })
       } else {
