@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
   let token  = sessionStorage.getItem('token');
   let user_info = sessionStorage.getItem('user_info');
   if(to.matched.some(record => record.meta.auth)) {
-    if(typeof token == 'undefined' || typeof user_info == 'undefined') {
+    if(!token || !user_info) {
       next({ path: '/login' });
       iView.Message.warning({
         content: i18n.t('common.info.userInformationFailure'),
