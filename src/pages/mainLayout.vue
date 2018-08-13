@@ -6,7 +6,9 @@
           <leftNav :collapsed="isCollapsed"></leftNav>
         </Sider>
         <Layout>
+          <div id="container">
             <router-view/>
+          </div>
         </Layout>
     </Layout>
   </div>

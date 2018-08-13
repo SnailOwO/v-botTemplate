@@ -1,0 +1,36 @@
+#role {
+    padding: 20px 30px;
+    .role-input {
+        width: @small_input_width; 
+        padding-left: @input_padding_left;
+    }
+
+    #search-box {
+        .datetime-box,
+        .name-box {
+            margin-right: 10px;
+            display: inline-block;
+        }
+    }
+
+    #operation-box {
+        margin-top: 20px;
+        .icon-box {
+            float: right;
+            width: 35px;
+            cursor: pointer;
+            text-align: center;
+            &:hover {
+                color: @blue;
+            }
+        }
+        i {
+            font-size: @base_icon_size;
+        }
+    }
+
+    #table-box {
+        clear: both;    
+        padding: 25px 0;
+    }
+}

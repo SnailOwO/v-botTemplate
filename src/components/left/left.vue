@@ -1,5 +1,5 @@
 <template>
-    <Menu :active-name="this.$t('common.menu.index')" theme="dark" width="auto" :class="menuitemClasses">
+    <Menu :active-name="this.$t('common.menu.index')" theme="dark" width="auto" :class="menuitemClasses" @on-select="pageRedirect">
         <MenuItem :name="this.$t('common.menu.index')"> 
             <Icon type="home"></Icon>{{ this.$t('common.menu.index') }}
         </MenuItem>
@@ -7,13 +7,13 @@
             <template slot="title">
                 <Icon type="ios-people"></Icon>{{ this.$t('common.menu.userManage') }}
             </template>
-            <MenuItem name="this.$t('common.menu.userList')">{{ this.$t('common.menu.userList') }}</MenuItem>
+            <MenuItem name="user">{{ this.$t('common.menu.userList') }}</MenuItem>
         </Submenu>
         <Submenu :name="this.$t('common.menu.roleManage')">
             <template slot="title">
                 <Icon type="stats-bars"></Icon>{{ this.$t('common.menu.roleManage') }}
             </template>
-            <MenuItem :name="this.$t('common.menu.roleList')">{{ this.$t('common.menu.roleList') }}</MenuItem>
+            <MenuItem name="role">{{ this.$t('common.menu.roleList') }}</MenuItem>
         </Submenu>
         <Submenu :name="this.$t('common.menu.sys.index')">
             <template slot="title">
@@ -40,11 +40,14 @@
 export default {
   data () {
     return {
-     
+        
     }
   },
   methods: {
-  
+    pageRedirect(name) {
+        console.log(name);
+        this.$router.push(name);
+    }
   },
   computed: {
     menuitemClasses: function () {

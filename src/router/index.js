@@ -28,13 +28,13 @@ const router = new Router({
         },
         {
           path: 'role',
-          name: 'roleManage',
+          name: 'roleList',
           meta: { auth: true },
-          component: resolve => require(['../pages/sysSet'], resolve),
+          component: resolve => require(['../pages/role'], resolve),
         },
         {
           path: 'user',
-          name: 'userManage',
+          name: 'userList',
           meta: { auth: true },
           component: resolve => require(['../pages/sysSet'], resolve),
         },
