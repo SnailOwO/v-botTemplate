@@ -13,10 +13,15 @@ const role = {
         addPower: '权限',
         roleTable: {
             roleName: '角色名',
-            guardName: '守卫名',
+            guardName: 'Guard',
             createdTime: '创建时间',
             updatedTime: '更新时间'
         }
+    },
+    info: {
+        createTimeIllegal: '创建时间不合法',
+        updateTimeIllegal: '更新时间不合法',
+        
     }
 }
 

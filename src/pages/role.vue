@@ -7,11 +7,11 @@
         </div>
         <div class="datetime-box">
           <label>{{ this.$t('role.page.createdTime') }}</label>
-          <DatePicker type="datetime" :placeholder="this.$t('role.page.dateTimePlaceholder')"></DatePicker>
+          <DatePicker @on-change="changeCreateTime" type="datetimerange" :placeholder="this.$t('role.page.dateTimePlaceholder')"></DatePicker>
         </div>
         <div class="datetime-box">
           <label>{{ this.$t('role.page.updatedTime') }}</label>
-          <DatePicker type="datetime" :placeholder="this.$t('role.page.dateTimePlaceholder')"></DatePicker>
+          <DatePicker @on-change="changeUpdateTime" type="datetimerange" :placeholder="this.$t('role.page.dateTimePlaceholder')"></DatePicker>
         </div>
         <Button type="primary" @click="search">{{ this.$t('role.page.confirm') }}</Button>
     </div>
@@ -62,6 +62,8 @@ export default {
     return {
       roleName: '',
       isCheckALL: true,
+      createTime: '',
+      updateTime: '',
       columns: [
           {
               type: 'selection',
@@ -129,7 +131,30 @@ export default {
       this.$refs.selection.selectAll(false);
     },
     search() {
-      
+      let create_len = this.createTime.length;
+      if(this.createTime.length) {
+        for(let i = 0;i < create_len;i++) {
+          if(this.createTime[i] && !this.validateDate(this.createTime[i])) {
+            this.$Message.warning(this.$t('role.info.createTimeIllegal'));  
+            return false;
+          }
+        }
+      }
+      let update_len = this.updateTime.length;
+      if(this.updateTime.length) {
+        for(let i = 0;i < update_len;i++) {
+          if(this.updateTime[i] && !this.validateDate(this.updateTime[i])) {
+            this.$Message.warning(this.$t('role.info.updateTimeIllegal'));  
+            return false;
+          }
+        }
+      }
+    },
+    changeCreateTime(dateTime) {
+      this.createTime = dateTime;
+    },
+    changeUpdateTime(dateTime) {
+      this.updateTime = dateTime;
     }
   },
   watch: {

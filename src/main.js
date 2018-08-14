@@ -10,8 +10,10 @@ import 'iview/dist/styles/iview.css'
 import 'src/css/common.less'
 import echarts from 'echarts'
 import store from 'store/index'
+import helper from './helper'
 
 Vue.use(iView)
+Vue.use(helper);
   
 Vue.prototype.$http = httpRequest;
 Vue.prototype.$echarts = echarts;
