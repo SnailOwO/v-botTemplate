@@ -32,7 +32,7 @@ axios.interceptors.request.use(config => {
     });
     // header头中，设置token
     if(sessionStorage.getItem('token')) {
-        config.headers['Authorization'] = sessionStorage.getItem('token');  
+        config.headers['Authorization'] = 'Bearer' + sessionStorage.getItem('token');  
     }
     return config;
 }, error => {
@@ -42,13 +42,22 @@ axios.interceptors.request.use(config => {
 
 //响应拦截器即异常处理
 axios.interceptors.response.use(response => {
-    removePending(response.config);
+    console.log(response.headers);
+    if(response.headers.hasOwnProperty('Authorization')){
+        console.log(response.headers);
+        sessionStorage.setItem('token',response.headers['Authorization']);            
+    }
     return response;  
-}, err => {
-    // console.log(err);
-    // todo:公用异常处理
-    removePending(err.response.config);
-    return Promise.reject(err.response);
+}, error => {
+    // switch (error.response.status) {
+    //     case 401:   // Token失效
+    //         sessionStorage.clear();
+    //         break
+    //     default:
+    //         console.log(error.response)
+    //   }
+    console.log(error.response);
+    return Promise.reject(error.response);
 })
 
 // 导出 axios

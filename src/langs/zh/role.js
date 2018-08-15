@@ -7,6 +7,7 @@ const role = {
         dateTimePlaceholder: '请选择相应的时间',
         confirm: '搜索',
         refresh: '刷新',
+        reset: '重置',
         delete: '删除',
         checkAll: '全选',
         cancel: '取消',
