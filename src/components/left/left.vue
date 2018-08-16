@@ -1,6 +1,6 @@
 <template>
     <Menu :active-name="this.$t('common.menu.index')" theme="dark" width="auto" :class="menuitemClasses" @on-select="pageRedirect">
-        <MenuItem :name="this.$t('common.menu.index')"> 
+        <MenuItem name="index"> 
             <Icon type="home"></Icon>{{ this.$t('common.menu.index') }}
         </MenuItem>
         <Submenu :name="this.$t('common.menu.userManage')">

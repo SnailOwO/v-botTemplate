@@ -49,13 +49,13 @@ axios.interceptors.response.use(response => {
     }
     return response;  
 }, error => {
-    // switch (error.response.status) {
-    //     case 401:   // Token失效
-    //         sessionStorage.clear();
-    //         break
-    //     default:
-    //         console.log(error.response)
-    //   }
+    switch (error.response.status) {
+        case 401:   // Token失效
+            sessionStorage.clear();
+            break
+        default:
+            console.log(error.response);
+      }
     console.log(error.response);
     return Promise.reject(error.response);
 })

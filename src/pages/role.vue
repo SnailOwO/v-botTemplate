@@ -24,7 +24,7 @@
       </div>
 
       <div class="icon-box">
-        <Icon type="trash-a"></Icon>
+        <Icon type="trash-a"></Icon>  
         <p>{{ this.$t('role.page.delete') }}</p>
       </div>
 

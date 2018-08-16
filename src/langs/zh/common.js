@@ -21,7 +21,7 @@ const common = {
     },
     header: {   //头部导航栏
         headImage: '用户头像',
-        userMeun: {
+        userMenu: {
             resetPwd: '修改密码',
             logout: '退出登录'
         },
