@@ -38,9 +38,13 @@
         <p>{{ this.$t('role.page.cancel') }}</p>
       </div>
 
+      <div class="icon-box" @click="showRoleModal">
+        <Icon type="person-add"></Icon>
+        <p>{{ this.$t('role.page.addRole') }}</p>
+      </div>
+
       <div class="icon-box">
-        <!-- <Icon type="ios-plus"></Icon> -->
-        <Icon type="ios-plus-outline"></Icon>
+        <Icon type="gear-a"></Icon>
         <p>{{ this.$t('role.page.addPower') }}</p>
       </div>
     </div>
@@ -52,6 +56,18 @@
     <div class="footer">
       <Page :total="count" :page-size="pageSize" :current="current" @on-change="pageSwitch" show-elevator></Page>
     </div>
+    <Modal
+      v-model="addRoleShow"
+      :mask-closable="false"
+      :title="roleObj.title"
+    >
+    <div class="role-operate-box">
+      <i-input v-model="roleObj.name" :placeholder="this.$t('role.page.roleNmaePlaceholder')" class="role-operate-input"></i-input>
+    </div>
+    <div slot="footer">
+      <Button type="primary" @click="confirm()">{{ this.$t('login.page.registerDialog.confirm') }}</Button>
+    </div>
+    </Modal>
   </div>  
 </template>
 
@@ -64,8 +80,11 @@ export default {
       roleName: '',
       isCheckALL: true,
       editAble: false,
+      addRoleShow: false,
+      isEdit: false,
       createTime: '',
       updateTime: '',
+      index: 0,
       columns: [
           {
             type: 'selection',
@@ -87,7 +106,45 @@ export default {
           {
             title: this.$t('role.page.roleTable.updatedTime'),
             key: 'updated_at'
-          }
+          },
+          {
+            title: this.$t('role.page.roleTable.action'),
+            key: 'action',
+            align: 'center',
+            render: (h, params) => {
+                return h('div', [
+                    h('Button', {
+                        props: {
+                            type: 'primary',
+                            size: 'small'
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                          click: () => {
+                            this.isEdit = true;
+                            this.index = params.index;
+                            this.$set(this.roleObj,'id',params.row.id);
+                            this.$set(this.roleObj,'name',params.row.name);
+                            this.showRoleModal();
+                          }
+                        }
+                    }, this.$t('role.page.editRole')),
+                    h('Button', {
+                        props: {
+                            type: 'error',
+                            size: 'small'
+                        },
+                        on: {
+                          click: () => {
+                            this.removeRole(params.row.id)
+                          }
+                        }
+                    }, this.$t('role.page.delRole'))
+                ]);
+            }
+        }
       ],
       data: [],
       current: 1,  
@@ -95,6 +152,11 @@ export default {
       pageSize: 10,
       paramObj: {
         page: 1,
+      },
+      roleObj: {
+        id: '',
+        name: '',
+        title: this.$t('role.page.roleModal.addTitle'),
       },
     }
   },
@@ -118,6 +180,69 @@ export default {
         console.log('role',error);
       })
     },
+    showRoleModal() {
+      this.addRoleShow = !this.addRoleShow;
+    },
+    confirm() {
+      if(!this.roleObj.name) {
+        this.$Message.warning(this.$t('role.page.roleModal.roleNameEmpty'));  
+        return false;
+      }
+      if(this.roleObj.name.length > 191) {
+        this.$Message.warning(this.$t('role.page.roleModal.roleNameLengthMax'));  
+        return false;
+      }
+      if(!this.isEdit) {
+        this.addRole();
+      } else {
+        this.editRole();
+      }
+    },
+    close() {
+      this.index = 0;
+      this.isEdit = false;
+      this.addRoleShow = false;
+      this.$set(this.roleObj,'name','');
+    },
+    addRole() {
+      this.$http({url: '/addRole',data:this.roleObj,method: 'post'}, (res) => {
+        this.$Message.success(res.data.msg);  
+        this.data.push(res.data.data);
+        this.close();
+      }, (error) => {
+        if(error.data.hasOwnProperty('msg')) {
+          this.$Message.warning(error.data.msg);  
+        } else {
+          this.$Message.warning(this.$t('common.info.systemBusy')); 
+        }
+        console.log('add role',error);
+      })
+    },
+    editRole() {
+      this.$http({url: '/editRole',data:this.roleObj,method: 'put'}, (res) => {
+        this.$Message.success(res.data.msg);  
+        this.$set(this.data[this.index],'name',res.data.data.name);
+        this.close();
+      }, (error) => {
+        if(error.data.hasOwnProperty('msg')) {
+          this.$Message.warning(error.data.msg);  
+        } else {
+          this.$Message.warning(this.$t('common.info.systemBusy')); 
+        }
+        console.log('edit role',error);
+      })
+    },
+    removeRole(id) {
+      let del_url = '/role/' + id;
+      this.$http({url: del_url}, (res) => {
+        
+      }, (error) => {
+        if(error.data.msg) {
+          this.$Message.warning(error.data.msg);  
+        }
+        console.log('delete role',error);
+      })
+    },
     checkAll() {
       this.isCheckALL = !this.isCheckALL;
       this.$refs.selection.selectAll(true);
@@ -127,6 +252,8 @@ export default {
       this.$refs.selection.selectAll(false);
     },
     search() {
+      console.log(this.createTime);
+      console.log(this.updateTime);
       let create_len = this.createTime.length;
       if(this.createTime.length) {
         for(let i = 0;i < create_len;i++) {
@@ -181,7 +308,18 @@ export default {
     }
   },
   watch: {
-
+    isEdit: function() {
+      if(this.isEdit) {
+        this.$set(this.roleObj,'title',this.$t('role.page.roleModal.editTittle'));
+      } else {
+        this.$set(this.roleObj,'title',this.$t('role.page.roleModal.addTitle'));
+      }
+    },
+    addRoleShow: function() {
+      if(!this.addRoleShow) {
+        this.close();
+      }
+    }
   }
 }
 </script>

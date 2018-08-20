@@ -15,14 +15,13 @@
     <div class="user-box">
       <div class="user-head">
         <Avatar :src="headImg" />
-        <!-- <img :src="headImg" :alt="this.$t('common.header.headImage')" /> -->
       </div>
       <div class="user-name">
         <label>admin</label>
         <i class="dropdown ivu-icon ivu-icon-arrow-down-b"></i>
         <ul class="user-menu">
-          <li>{{ this.$t('common.header.userMeun.resetPwd') }}</li>
-          <li @click="logout">{{ this.$t('common.header.userMeun.logout') }}</li>
+          <li>{{ this.$t('common.header.userMenu.resetPwd') }}</li>
+          <li @click="logout">{{ this.$t('common.header.userMenu.logout') }}</li>
         </ul>
       </div>
     </div>
