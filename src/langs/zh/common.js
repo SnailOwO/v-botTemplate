@@ -18,10 +18,9 @@ const common = {
         addRole: '角色新增',    
         delRole: '角色删除',
         editRole: '角色编辑',
-        addPermission: '权限新增',
-        editPermission: '权限编辑',
-        showPermission: '用户权限查询',
-        allPermission: '权限列表',
+        addOrEditPermission: '权限赋予|编辑',
+        permissionList: '权限列表',
+        getRolePermission: '角色权限查询',
         sys: {
             index: '系统设置',
             activeCode: '邀请码设置',

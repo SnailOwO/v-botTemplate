@@ -1,5 +1,8 @@
 //引入axios
 import axios from 'axios'
+import Vue from 'vue'
+import iView from 'iview'
+import i18n from 'langs/lang'
 
 axios.defaults.baseURL = 'http://www.v-bot.loc/api'   // /api
 //设置默认请求头
@@ -56,7 +59,12 @@ axios.interceptors.response.use(response => {
         default:
             console.log(error.response);
       }
-    console.log(error.response);
+      let msg = error.response.data.msg;
+      if(msg) {
+        iView.Message.warning(msg);  
+      } else {
+        iView.Message.warning(this.$t('common.info.systemBusy')); 
+      }
     return Promise.reject(error.response);
 })
 

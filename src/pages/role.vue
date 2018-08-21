@@ -14,16 +14,16 @@
           <DatePicker :editable="editAble" v-model="updateTime" @on-change="changeUpdateTime" @on-clear="clearUpdate" type="datetimerange" :placeholder="this.$t('role.page.dateTimePlaceholder')"></DatePicker>
         </div>
         <Button type="primary" @click="search">{{ this.$t('role.page.confirm') }}</Button>
-        <Button @click="reset">{{ this.$t('role.page.reset') }}</Button>
+        <!-- <Button @click="reset">{{ this.$t('role.page.reset') }}</Button> -->
     </div>
     
     <div id="operation-box">
-      <div class="icon-box">
+      <div class="icon-box" @click="reset">
         <Icon type="refresh"></Icon>
-        <p>{{ this.$t('role.page.refresh') }}</p>
+        <p>{{ this.$t('role.page.reset') }}</p>
       </div>
 
-      <div class="icon-box">
+      <div class="icon-box" @click="removeRole(selectIds)">
         <Icon type="trash-a"></Icon>  
         <p>{{ this.$t('role.page.delete') }}</p>
       </div>
@@ -43,14 +43,14 @@
         <p>{{ this.$t('role.page.addRole') }}</p>
       </div>
 
-      <div class="icon-box">
+      <!-- <div class="icon-box">
         <Icon type="gear-a"></Icon>
         <p>{{ this.$t('role.page.addPower') }}</p>
-      </div>
+      </div> -->
     </div>
 
     <div id="table-box">
-      <Table border ref="selection" :columns="columns" :data="data"></Table>
+      <Table @on-select-cancel="selectCancel" @on-select-all="selecAll" @on-select="selectOne" border ref="selection" :columns="columns" :data="data"></Table>
     </div>
 
     <div class="footer">
@@ -63,6 +63,19 @@
     >
     <div class="role-operate-box">
       <i-input v-model="roleObj.name" :placeholder="this.$t('role.page.roleNmaePlaceholder')" class="role-operate-input"></i-input>
+    </div>
+    <div slot="footer">
+      <Button type="primary" @click="confirm()">{{ this.$t('login.page.registerDialog.confirm') }}</Button>
+    </div>
+    </Modal>
+
+    <Modal
+      v-model="powerShow"
+      :mask-closable="false"
+      :title="this.$t('role.page.roleModal.rolePowerOperate')"
+    >
+    <div class="permission-operate-box">
+      <Tree :data="treeData" show-checkbox multiple></Tree>
     </div>
     <div slot="footer">
       <Button type="primary" @click="confirm()">{{ this.$t('login.page.registerDialog.confirm') }}</Button>
@@ -82,9 +95,11 @@ export default {
       editAble: false,
       addRoleShow: false,
       isEdit: false,
+      powerShow: false,
       createTime: '',
       updateTime: '',
-      index: 0,
+      index: [],   //预留本地更新使用,本想删除也手动删除，但是感觉还是手动刷新吧
+      selectIds: [],
       columns: [
           {
             type: 'selection',
@@ -93,19 +108,23 @@ export default {
           },
           {
             title:this.$t('role.page.roleTable.roleName'),
-            key: 'name'
+            key: 'name',
+            ellipsis: true
           },
           {
             title: this.$t('role.page.roleTable.guardName'),
-            key: 'guard_name'
+            key: 'guard_name',
+            ellipsis: true
           },
           {
             title: this.$t('role.page.roleTable.createdTime'),
-            key: 'created_at'
+            key: 'created_at',
+            ellipsis: true
           },
           {
             title: this.$t('role.page.roleTable.updatedTime'),
-            key: 'updated_at'
+            key: 'updated_at',
+            ellipsis: true
           },
           {
             title: this.$t('role.page.roleTable.action'),
@@ -115,8 +134,10 @@ export default {
                 return h('div', [
                     h('Button', {
                         props: {
-                            type: 'primary',
-                            size: 'small'
+                            // type: 'primary',
+                            size: 'small',
+                            shape: "circle",
+                            icon: "wrench" 
                         },
                         style: {
                             marginRight: '5px'
@@ -124,24 +145,41 @@ export default {
                         on: {
                           click: () => {
                             this.isEdit = true;
-                            this.index = params.index;
+                            this.index.push(params.index);
                             this.$set(this.roleObj,'id',params.row.id);
                             this.$set(this.roleObj,'name',params.row.name);
                             this.showRoleModal();
                           }
                         }
-                    }, this.$t('role.page.editRole')),
+                    }),   // this.$t('role.page.editRole')
                     h('Button', {
                         props: {
-                            type: 'error',
-                            size: 'small'
+                            // type: 'error',
+                            size: 'small',
+                            shape: "circle",
+                            icon: "trash-a" 
+                        },
+                        style: {
+                          marginRight: '5px'
                         },
                         on: {
                           click: () => {
-                            this.removeRole(params.row.id)
+                            this.removeRole([params.row.id]);
                           }
                         }
-                    }, this.$t('role.page.delRole'))
+                    }),   // this.$t('role.page.delRole')
+                    h('Button', {
+                        props: {
+                            size: 'small',
+                            shape: "circle",
+                            icon: "gear-a" 
+                        },
+                        on: {
+                          click: () => {
+                            this.powerModal(params.row.id);
+                          }
+                        }
+                     })
                 ]);
             }
         }
@@ -158,13 +196,14 @@ export default {
         name: '',
         title: this.$t('role.page.roleModal.addTitle'),
       },
+      treeData: []
     }
   },
   created() {
     this.getList(this.paramObj);
   },
   mounted() {
-
+    
   },
   methods: {
     getList(obj) {
@@ -199,10 +238,10 @@ export default {
       }
     },
     close() {
-      this.index = 0;
       this.isEdit = false;
       this.addRoleShow = false;
       this.$set(this.roleObj,'name','');
+      this.index.splice(0,this.index.length);
     },
     addRole() {
       this.$http({url: '/addRole',data:this.roleObj,method: 'post'}, (res) => {
@@ -210,36 +249,30 @@ export default {
         this.data.push(res.data.data);
         this.close();
       }, (error) => {
-        if(error.data.hasOwnProperty('msg')) {
-          this.$Message.warning(error.data.msg);  
-        } else {
-          this.$Message.warning(this.$t('common.info.systemBusy')); 
-        }
         console.log('add role',error);
       })
     },
     editRole() {
       this.$http({url: '/editRole',data:this.roleObj,method: 'put'}, (res) => {
         this.$Message.success(res.data.msg);  
-        this.$set(this.data[this.index],'name',res.data.data.name);
+        this.$set(this.data[this.index[0]],'name',res.data.data.name);
         this.close();
       }, (error) => {
-        if(error.data.hasOwnProperty('msg')) {
-          this.$Message.warning(error.data.msg);  
-        } else {
-          this.$Message.warning(this.$t('common.info.systemBusy')); 
-        }
         console.log('edit role',error);
       })
     },
-    removeRole(id) {
-      let del_url = '/role/' + id;
-      this.$http({url: del_url}, (res) => {
-        
+    removeRole(role_ids) {
+      if(!role_ids.length) {
+        this.$Message.warning(this.$t('role.info.chooseSelectionFirst')); 
+        return false;
+      }
+      let obj = {
+        ids: role_ids
+      };
+      this.$http({url: '/delRole',data: obj,method: 'delete'}, (res) => {
+        this.search();
+        this.cancel();
       }, (error) => {
-        if(error.data.msg) {
-          this.$Message.warning(error.data.msg);  
-        }
         console.log('delete role',error);
       })
     },
@@ -251,28 +284,43 @@ export default {
       this.isCheckALL = !this.isCheckALL;
       this.$refs.selection.selectAll(false);
     },
+    selectOne(selection,row) {
+      this.selectIds.push(row.id);
+    },
+    selecAll(selection) {
+      this.selectIds.splice(0,this.selectIds.length);
+      if(selection.length) {
+        for(let i = 0;i < selection.length;i++) {
+          this.selectIds.push(selection[i]['id']);
+        }
+      }
+    },
+    selectCancel(selection) {
+      this.selectIds.splice(0,this.selectIds.length);
+      if(selection.length) {
+        for(let i = 0;i < selection.length;i++) {
+          this.selectIds.push(selection[i]['id']);
+        }
+      }
+    },
     search() {
       console.log(this.createTime);
       console.log(this.updateTime);
       let create_len = this.createTime.length;
       if(this.createTime.length) {
         for(let i = 0;i < create_len;i++) {
-          if(!this.createTime[i] || (this.createTime[i] && !this.validateDate(this.createTime[i]))) {
-            this.$Message.warning(this.$t('role.info.createTimeIllegal'));  
-            return false;
+          if(this.createTime[i] && this.validateDate(this.createTime[i])) {
+            this.$set(this.paramObj,'created_at',this.createTime);
           }
         }
-        this.$set(this.paramObj,'created_at',this.createTime);
       }
       let update_len = this.updateTime.length;
       if(this.updateTime.length) {
         for(let i = 0;i < update_len;i++) {
-          if(!this.updateTime[i] || (this.updateTime[i] && !this.validateDate(this.updateTime[i]))) {
-            this.$Message.warning(this.$t('role.info.updateTimeIllegal'));  
-            return false;
+          if(this.updateTime[i] && this.validateDate(this.updateTime[i])) {
+            this.$set(this.paramObj,'updated_at',this.updateTime);
           }
         }
-        this.$set(this.paramObj,'updated_at',this.updateTime);
       }
       if(this.roleName) {
         this.$set(this.paramObj,'name',this.roleName);
@@ -305,6 +353,41 @@ export default {
     clearUpdate() {
       this.updateTime = '';
       this.$delete(this.paramObj,'updated_at',this.paramObj['updated_at']);
+    },
+    powerModal(role_id) {
+      this.powerShow = !this.powerShow;
+      if(!role_id) {
+        this.$Message.warning(this.$t('role.info.roleIDIllegal')); 
+        return false;
+      }
+      if(this.powerShow) {
+        this.$http({url: '/rolePermission?role_id=' + role_id}, (res) => {
+          let data = res.data;
+          this.treeData = this.initTree(data,0);
+          console.log(this.treeData);
+          //this.treeData = res.data;
+        }, (error) => {
+          console.log('get role permission',error);
+        })
+      }
+    },
+    initTree(data,pid) {
+      let tree_ary = [];
+      let len = data.length;
+      for(let i = 0;i < len;i++) {
+        if(data[i]['pid'] == pid) {
+           let obj = {
+            title: this.$t('common.menu.' + data[i]['name']),
+            expand: true,
+          };
+          if(!pid) {
+            obj.selected = true;
+          }
+          obj.children = this.initTree(data,data[i]['id']);
+          tree_ary.push(obj);
+        }
+      }
+      return tree_ary;
     }
   },
   watch: {

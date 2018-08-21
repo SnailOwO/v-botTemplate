@@ -26,12 +26,15 @@ const role = {
             addTitle: '新增角色',
             editTittle: '编辑角色',
             roleNameEmpty: '角色名称不能为空',
-            roleNameLengthMax: '角色名称过长'
+            roleNameLengthMax: '角色名称过长',
+            rolePowerOperate: '权限操作'
         }
     },
     info: {
         createTimeIllegal: '创建时间不合法',
         updateTimeIllegal: '更新时间不合法',
+        chooseSelectionFirst: '请选择需要删除的角色项',
+        roleIDIllegal: '非法的角色ID'
     }
 }
 
