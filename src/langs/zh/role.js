@@ -34,7 +34,8 @@ const role = {
         createTimeIllegal: '创建时间不合法',
         updateTimeIllegal: '更新时间不合法',
         chooseSelectionFirst: '请选择需要删除的角色项',
-        roleIDIllegal: '非法的角色ID'
+        roleIDIllegal: '非法的角色ID',
+        permissionEmpty: '请先选择相应的权限'
     }
 }
 

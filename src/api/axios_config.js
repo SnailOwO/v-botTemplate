@@ -50,6 +50,10 @@ axios.interceptors.response.use(response => {
         console.log(response.headers);
         sessionStorage.setItem('token',response.headers['Authorization']);            
     }
+    let msg = response.data.msg;
+    if(msg) {
+        iView.Message.success(msg); 
+    }
     return response;  
 }, error => {
     switch (error.response.status) {

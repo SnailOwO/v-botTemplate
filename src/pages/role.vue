@@ -75,10 +75,10 @@
       :title="this.$t('role.page.roleModal.rolePowerOperate')"
     >
     <div class="permission-operate-box">
-      <Tree :data="treeData" show-checkbox multiple></Tree>
+      <Tree :data="treeData" @on-check-change="checkNode" show-checkbox multiple></Tree>
     </div>
     <div slot="footer">
-      <Button type="primary" @click="confirm()">{{ this.$t('login.page.registerDialog.confirm') }}</Button>
+      <Button type="primary" @click="confirmPower()">{{ this.$t('login.page.registerDialog.confirm') }}</Button>
     </div>
     </Modal>
   </div>  
@@ -176,7 +176,8 @@ export default {
                         },
                         on: {
                           click: () => {
-                            this.powerModal(params.row.id);
+                            this.roleId = params.row.id;
+                            this.powerModal();
                           }
                         }
                      })
@@ -196,7 +197,9 @@ export default {
         name: '',
         title: this.$t('role.page.roleModal.addTitle'),
       },
-      treeData: []
+      treeData: [],
+      nodeAry: [],
+      roleId: 0,
     }
   },
   created() {
@@ -245,7 +248,6 @@ export default {
     },
     addRole() {
       this.$http({url: '/addRole',data:this.roleObj,method: 'post'}, (res) => {
-        this.$Message.success(res.data.msg);  
         this.data.push(res.data.data);
         this.close();
       }, (error) => {
@@ -254,7 +256,6 @@ export default {
     },
     editRole() {
       this.$http({url: '/editRole',data:this.roleObj,method: 'put'}, (res) => {
-        this.$Message.success(res.data.msg);  
         this.$set(this.data[this.index[0]],'name',res.data.data.name);
         this.close();
       }, (error) => {
@@ -354,18 +355,17 @@ export default {
       this.updateTime = '';
       this.$delete(this.paramObj,'updated_at',this.paramObj['updated_at']);
     },
-    powerModal(role_id) {
+    powerModal() {
       this.powerShow = !this.powerShow;
-      if(!role_id) {
+      if(!this.roleId) {
         this.$Message.warning(this.$t('role.info.roleIDIllegal')); 
         return false;
       }
       if(this.powerShow) {
-        this.$http({url: '/rolePermission?role_id=' + role_id}, (res) => {
+        this.$http({url: '/rolePermission?role_id=' + this.roleId}, (res) => {
           let data = res.data;
           this.treeData = this.initTree(data,0);
           console.log(this.treeData);
-          //this.treeData = res.data;
         }, (error) => {
           console.log('get role permission',error);
         })
@@ -377,6 +377,7 @@ export default {
       for(let i = 0;i < len;i++) {
         if(data[i]['pid'] == pid) {
            let obj = {
+            id: data[i]['id'],
             title: this.$t('common.menu.' + data[i]['name']),
             expand: true,
           };
@@ -388,6 +389,30 @@ export default {
         }
       }
       return tree_ary;
+    },
+    checkNode(node) {
+      let node_len = node.length;
+      if(node_len) {
+        for(let i = 0;i < node_len;i++) {
+          this.nodeAry.push(node[i]['id']);
+        } 
+      }
+      console.log(this.nodeAry);
+    },
+    confirmPower() {
+      if(!this.nodeAry.length) {
+        this.$Message.warning(this.$t('role.info.permissionEmpty')); 
+        return false;
+      }
+      let obj = {
+        role_id: this.roleId,
+        permission_ary: this.nodeAry
+      };
+      this.$http({url: '/permissionOperate',data: obj,method: 'post'}, (res) => {
+        this.powerShow = false;
+      }, (error) => {
+        console.log('get role permission',error);
+      })
     }
   },
   watch: {
@@ -401,6 +426,12 @@ export default {
     addRoleShow: function() {
       if(!this.addRoleShow) {
         this.close();
+      }
+    },
+    powerShow: function() {
+      if(!this.powerShow) {
+        this.nodeAry.splice(0,this.nodeAry.length);
+        this.treeData.splice(0,this.treeData.length);
       }
     }
   }
