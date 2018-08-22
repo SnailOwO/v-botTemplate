@@ -355,6 +355,22 @@ export default {
       this.updateTime = '';
       this.$delete(this.paramObj,'updated_at',this.paramObj['updated_at']);
     },
+    getAllPower() {   //获取当前数据库中，所有的权限信息
+      return this.$axios.get('/permissionList');
+    },
+    getRolePermission() {   //获取当前角色的权限id
+      return this.$axios.get('/rolePermission?role_id=' + this.roleId);
+    },
+    allGetPermission() {
+      let _this = this;
+      this.$axios.all([this.getAllPower(), this.getRolePermission()])
+      .then(this.$axios.spread((powers, role_powers) => {
+        let all_power = powers.data;
+        let role_power = role_powers.data;
+        this.treeData = this.initTree(all_power,0,role_power);
+        console.log(this.treeData);
+      }));
+    },
     powerModal() {
       this.powerShow = !this.powerShow;
       if(!this.roleId) {
@@ -362,29 +378,29 @@ export default {
         return false;
       }
       if(this.powerShow) {
-        this.$http({url: '/rolePermission?role_id=' + this.roleId}, (res) => {
-          let data = res.data;
-          this.treeData = this.initTree(data,0);
-          console.log(this.treeData);
-        }, (error) => {
-          console.log('get role permission',error);
-        })
+        this.allGetPermission();  
       }
     },
-    initTree(data,pid) {
+    initTree(data,pid,role_power) {
       let tree_ary = [];
       let len = data.length;
+      let role_power_len = role_power.length;
       for(let i = 0;i < len;i++) {
         if(data[i]['pid'] == pid) {
-           let obj = {
+          let obj = {
             id: data[i]['id'],
             title: this.$t('common.menu.' + data[i]['name']),
             expand: true,
           };
-          if(!pid) {
-            obj.selected = true;
+          if(role_power_len) {
+            for(let j = 0;j < role_power_len;j++) {
+              if(role_power[j]['id'] == data[i]['id']) {
+                obj.checked = true;
+                break;
+              }
+            }
           }
-          obj.children = this.initTree(data,data[i]['id']);
+          obj.children = this.initTree(data,data[i]['id'],role_power);
           tree_ary.push(obj);
         }
       }

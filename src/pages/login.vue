@@ -231,12 +231,8 @@ export default {
           inviteCode: this.inviteCode
         };
         this.$http({url: '/register',data: obj, method: 'post'}, (res) => {
-          this.$Message.success(res.data.msg);
           this.isRegister = !this.isRegister;
         }, (error) => {
-          if(error.data.msg) {
-            this.$Message.warning(error.data.msg);  
-          }
           console.log('register',error);
         })
       } else {
