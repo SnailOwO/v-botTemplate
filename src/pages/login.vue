@@ -164,6 +164,7 @@ export default {
           let data =  res.data.data;
           sessionStorage.setItem('token',data.token);
           sessionStorage.setItem('user_info',data.user_info);   //用户信息
+          
           this.$router.push('/'); 
         }
       }, (error) => {

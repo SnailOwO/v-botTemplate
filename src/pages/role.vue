@@ -134,10 +134,10 @@ export default {
                 return h('div', [
                     h('Button', {
                         props: {
-                            // type: 'primary',
                             size: 'small',
                             shape: "circle",
-                            icon: "wrench" 
+                            icon: "wrench" ,
+                            disabled: params.row.id == 1 ? true : false
                         },
                         style: {
                             marginRight: '5px'
@@ -151,13 +151,13 @@ export default {
                             this.showRoleModal();
                           }
                         }
-                    }),   // this.$t('role.page.editRole')
+                    }),  
                     h('Button', {
                         props: {
-                            // type: 'error',
                             size: 'small',
                             shape: "circle",
-                            icon: "trash-a" 
+                            icon: "trash-a",
+                            disabled: params.row.id == 1 ? true : false
                         },
                         style: {
                           marginRight: '5px'
@@ -167,12 +167,13 @@ export default {
                             this.removeRole([params.row.id]);
                           }
                         }
-                    }),   // this.$t('role.page.delRole')
+                    }),  
                     h('Button', {
                         props: {
                             size: 'small',
                             shape: "circle",
-                            icon: "gear-a" 
+                            icon: "gear-a",
+                            disabled: params.row.id == 1 ? true : false 
                         },
                         on: {
                           click: () => {
@@ -213,6 +214,15 @@ export default {
       this.$http({url: '/roleList',data: obj, method: 'post'}, (res) => {
         if(res.data.roleAry) {
           this.data = res.data.roleAry;
+          // 手动将超级管理员的check box 置为 false
+          if(this.data.length) {
+            for(let i = 0;i < this.data.length;i++) {
+              if(this.data[i]['id'] == 1) {
+                this.data[i]['_disabled'] = true;
+                break;
+              }
+            }
+          }
         }
         this.count = res.data.count;
       }, (error) => {
@@ -396,6 +406,7 @@ export default {
             for(let j = 0;j < role_power_len;j++) {
               if(role_power[j]['id'] == data[i]['id']) {
                 obj.checked = true;
+                this.nodeAry.push(data[i]['id']);
                 break;
               }
             }
@@ -407,6 +418,7 @@ export default {
       return tree_ary;
     },
     checkNode(node) {
+      this.nodeAry.splice(0, this.nodeAry.length);
       let node_len = node.length;
       if(node_len) {
         for(let i = 0;i < node_len;i++) {
