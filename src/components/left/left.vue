@@ -40,8 +40,14 @@
 export default {
   data () {
     return {
-        
+       menuList: sessionStorage.getItem('user_menu') 
     }
+  },
+  created() {
+    
+  },
+  mounted() {
+    console.log('left menu',this.menuList);
   },
   methods: {
     pageRedirect(name) {

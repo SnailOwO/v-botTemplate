@@ -160,17 +160,14 @@ export default {
         obj.code = this.code;
       }
       this.$http({url: '/login',data: obj, method: 'post'}, (res) => {
-        if(res.status === 200) {
+        if(res.status == 200) {
           let data =  res.data.data;
           sessionStorage.setItem('token',data.token);
           sessionStorage.setItem('user_info',data.user_info);   //用户信息
-          
+          sessionStorage.setItem('user_menu',JSON.stringify(data.user_menu));   //用户菜单
           this.$router.push('/'); 
         }
       }, (error) => {
-        if(error.data.msg) {
-          this.$Message.warning(error.data.msg);  
-        }
         console.log('login',error);
       })
     },

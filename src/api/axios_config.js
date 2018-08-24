@@ -3,6 +3,7 @@ import axios from 'axios'
 import Vue from 'vue'
 import iView from 'iview'
 import i18n from 'langs/lang'
+import store from 'store/index'
 
 axios.defaults.baseURL = 'http://www.v-bot.loc/api'   // /api
 //设置默认请求头
@@ -45,14 +46,20 @@ axios.interceptors.request.use(config => {
 
 //响应拦截器即异常处理
 axios.interceptors.response.use(response => {
-    console.log(response.headers);
+    console.log(response);
+    // token
     if(response.headers.hasOwnProperty('Authorization')){
         console.log(response.headers);
         sessionStorage.setItem('token',response.headers['Authorization']);            
     }
+    // 统一成功消息回复
     let msg = response.data.msg;
     if(msg) {
         iView.Message.success(msg); 
+    }
+    // menu 
+    if(typeof sessionStorage.user_menu == 'undefined') {
+        store.dispatch('getUserMenu'); 
     }
     return response;  
 }, error => {
@@ -63,11 +70,12 @@ axios.interceptors.response.use(response => {
         default:
             console.log(error.response);
       }
+      // 统一错误消息回复
       let msg = error.response.data.msg;
       if(msg) {
         iView.Message.warning(msg);  
       } else {
-        iView.Message.warning(this.$t('common.info.systemBusy')); 
+        iView.Message.warning(i18n.t('common.info.systemBusy')); 
       }
     return Promise.reject(error.response);
 })

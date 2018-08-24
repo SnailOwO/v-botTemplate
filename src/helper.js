@@ -16,4 +16,5 @@ exports.install = function (Vue, options) {
         }
         return false;
     };
+    
 };
