@@ -27,7 +27,8 @@ exports.install = function (Vue, options) {
                     id: cate[i]['id'],
                     title: this.$t('common.menu.' + cate[i]['name']),
                     expand: true,
-                    level: cate[i]['level']
+                    level: cate[i]['level'],
+                    name: cate[i]['name']
                 };
                 obj.children = this.initCate(cate, cate[i]['id']);
                 tree_ary.push(obj);
